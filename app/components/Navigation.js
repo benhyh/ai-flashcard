@@ -1,5 +1,5 @@
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { AppBar, Button, Typography, Toolbar } from "@mui/material";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 
 export const Navigation = () => {
   return (
@@ -9,12 +9,9 @@ export const Navigation = () => {
           Woken AI 🏯
         </Typography>
         <SignedOut>
-          <Button color="inherit" href="/sign-in">
-            Login
-          </Button>
-          <Button color="inherit" href="/sign-up">
-            Sign Up
-          </Button>
+          <SignInButton>
+            <Button color="inherit">Login</Button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           <UserButton />
