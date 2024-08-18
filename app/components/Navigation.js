@@ -1,7 +1,5 @@
-"use client";
-
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { AppBar, Button, Typography, Toolbar, ThemeProvider, createTheme } from "@mui/material";
+import { AppBar, Button, Typography, Toolbar } from "@mui/material";
 
 export const Navigation = () => {
   return (
@@ -12,12 +10,9 @@ export const Navigation = () => {
         </Typography>
 
         <SignedOut>
-          <Button color="inherit" href="/sign-in">
-            Login
-          </Button>
-          <Button color="inherit" href="/sign-up">
-            Sign Up
-          </Button>
+          <SignInButton>
+            <Button color="inherit">Login</Button>
+          </SignInButton>
         </SignedOut>
 
         <SignedIn>

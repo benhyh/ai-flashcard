@@ -1,13 +1,17 @@
 "use client";
 
-import { GridComponents } from "./components/GridComponents.js";
-import { Navigation } from "./components/Navigation.js";
+import { Demo } from "./components/Demo";
+import { Features } from "./components/Features";
+import { Navigation } from "./components/navigation";
+import { Pricing } from "./components/Pricing";
 
 export default function Home() {
   return (
     <>
       <Navigation />
-      <GridComponents />
+      <Features />
+      <Demo />
+      <Pricing />
     </>
   );
 }
