@@ -1,8 +1,18 @@
-import { Box, Typography, Grid, Card, CardContent, Icon } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Icon,
+  Button,
+  CardActions,
+} from "@mui/material";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import { blue } from "@mui/material/colors";
 
 export const Features = () => {
   const features = [
@@ -28,7 +38,7 @@ export const Features = () => {
       icon: <TrendingUpIcon fontSize="large" />,
       title: "Progress Tracking",
       description:
-        "Monitor your learning progress with detailed analytics and insights.",
+        "Monitor your learning progress with detailed analytics and insights, helping identify areas for focus.",
     },
   ];
 
@@ -47,6 +57,7 @@ export const Features = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 textAlign: "center",
+                minHeight: "250px",
               }}
             >
               <CardContent>
@@ -60,6 +71,21 @@ export const Features = () => {
                   {feature.description}
                 </Typography>
               </CardContent>
+              <CardActions>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: blue[700],
+                    color: "white",
+                    textTransform: "uppercase",
+                    "&:hover": {
+                      backgroundColor: blue[800],
+                    },
+                  }}
+                >
+                  Learn More
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
         ))}
