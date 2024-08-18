@@ -1,3 +1,4 @@
+import { SignInButton } from "@clerk/nextjs";
 import { Navigation } from "./Navigation";
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
 
@@ -18,7 +19,7 @@ export const Hero = () => {
             component="h1"
             variant="h2"
             align="center"
-            color="text.primary"
+            color="text.secondary"
             gutterBottom
             sx={{
               whiteSpace: "nowrap",
@@ -51,21 +52,23 @@ export const Hero = () => {
             spacing={2}
             justifyContent="center"
           >
-            <Button
-              variant="contained"
-              sx={{
-                fontFamily: "Fondamento",
-                backgroundColor: "#4b6a2e",
-                color: "white",
-                "&:hover": {
-                  backgroundColor: "#374c28",
-                },
-                borderRadius: "20px",
-                padding: "10px 20px",
-              }}
-            >
-              Begin Your Journey
-            </Button>
+            <SignInButton>
+              <Button
+                variant="contained"
+                sx={{
+                  fontFamily: "Fondamento",
+                  backgroundColor: "#4b6a2e",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#374c28",
+                  },
+                  borderRadius: "20px",
+                  padding: "10px 20px",
+                }}
+              >
+                Begin Your Journey
+              </Button>
+            </SignInButton>
             <Button
               variant="outlined"
               sx={{

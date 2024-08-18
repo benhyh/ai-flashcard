@@ -3,7 +3,7 @@ import { green } from "@mui/material/colors";
 
 export const Navigation = () => {
   return (
-    <AppBar position="static" sx={{ bgcolor: "black" }}>
+    <AppBar position="sticky" sx={{ bgcolor: "black" }}>
       <Toolbar>
         <Box
           component="img"
