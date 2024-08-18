@@ -13,6 +13,7 @@ import PsychologyIcon from "@mui/icons-material/Psychology";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { blue } from "@mui/material/colors";
+import { Fondamento } from "next/font/google";
 
 export const Features = () => {
   const features = [
@@ -44,7 +45,7 @@ export const Features = () => {
 
   return (
     <Box sx={{ my: 6 }}>
-      <Typography variant="h4" component="h2" gutterBottom align="center">
+      <Typography variant="h4" component="h2" gutterBottom align="center" fontFamily={"Fondamento"} color={"white"}>
         Features
       </Typography>
       <Grid container spacing={4}>

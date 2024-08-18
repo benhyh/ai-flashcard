@@ -1,7 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Fondamento:ital@0;1&family=Great+Vibes&display=swap');
 
-* {
+body {
   margin: 0;
   padding: 0;
+  height:100dvh;
+  width: 100dvw;
+  background: radial-gradient(closest-corner, #4b6a2e, #242e21);
   box-sizing: border-box;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* #4b6a2e
+ #263d24 */
