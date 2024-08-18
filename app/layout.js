@@ -5,8 +5,11 @@ import { ClerkProvider } from "@clerk/nextjs";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "AI Flashcards",
-  description: "AI Flashcards - Headstarter",
+  title: "WokenAI",
+  description: "WokenAI - An AI-powered flashcard generator for Deepwoken",
+  icons: {
+    // create different sizes of the deepwoken logo (favicon) and put it here
+  },
 };
 
 export default function RootLayout({ children }) {

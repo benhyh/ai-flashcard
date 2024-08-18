@@ -2,13 +2,13 @@
 
 import { Demo } from "./components/Demo";
 import { Features } from "./components/Features";
-import { Navigation } from "./components/Navigation";
+import { Hero } from "./components/Hero";
 import { Pricing } from "./components/Pricing";
 
 export default function Home() {
   return (
     <>
-      <Navigation />
+      <Hero />
       <Features />
       <Demo />
       <Pricing />
