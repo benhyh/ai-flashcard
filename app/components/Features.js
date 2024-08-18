@@ -44,11 +44,17 @@ export const Features = () => {
   ];
 
   return (
-    <Box sx={{ my: 6 }}>
+    <Box sx={{ 
+      my: 6,
+      display: "flex",
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       <Typography variant="h4" component="h2" gutterBottom align="center" fontFamily={"Fondamento"} color={"white"}>
         Features
       </Typography>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} width={0.98}>
         {features.map((feature, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card
@@ -58,7 +64,8 @@ export const Features = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 textAlign: "center",
-                minHeight: "250px",
+                minHeight: "300px",
+                bgcolor: "white"
               }}
             >
               <CardContent>
