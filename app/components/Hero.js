@@ -23,6 +23,10 @@ export const Hero = () => {
             gutterBottom
             sx={{
               whiteSpace: "nowrap",
+              fontSize: {
+                xs: "2rem",
+                md: "4rem",
+              },
             }}
           >
             Welcome to{" "}
@@ -42,8 +46,14 @@ export const Hero = () => {
             align="center"
             color="text.secondary"
             paragraph
+            sx={{
+              fontSize: {
+                xs: "1.2rem",
+                md: "1.5rem",
+              },
+            }}
           >
-            Unravel Etherea's secrets and forge your legend with AI-powered
+            Unravel Etherea&apos;s secrets and forge your legend with AI-powered
             knowledge
           </Typography>
           <Stack

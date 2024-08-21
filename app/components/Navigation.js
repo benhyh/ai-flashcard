@@ -28,6 +28,7 @@ export const Navigation = () => {
                 color: green[800],
               },
             }}
+            href="#features-section"
           >
             Features
           </Button>
@@ -39,6 +40,7 @@ export const Navigation = () => {
                 color: green[800],
               },
             }}
+            href="#demo-section"
           >
             Demo
           </Button>
@@ -50,6 +52,7 @@ export const Navigation = () => {
                 color: green[800],
               },
             }}
+            href="#pricing-section"
           >
             Pricing
           </Button>
