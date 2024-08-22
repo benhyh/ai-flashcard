@@ -38,7 +38,7 @@ export async function POST(req) {
               name: "Power 20",
               name: plans[productId].title,
             },
-            unit_amount: formatAmountForStripe(19.99, "usd"), // $
+            unit_amount: formatAmountForStripe(plans[productId].price, "usd"), // $
             recurring: {
               interval: "month",
               interval_count: 1,
