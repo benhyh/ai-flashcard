@@ -1,4 +1,4 @@
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Navigation } from "./Navigation";
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
 
@@ -76,25 +76,27 @@ export const Hero = () => {
                   padding: "10px 20px",
                 }}
               >
-                Begin Your Journey
+                Return To Etherea
               </Button>
             </SignInButton>
-            <Button
-              variant="outlined"
-              sx={{
-                fontFamily: "Fondamento",
-                color: "white",
-                borderColor: "white",
-                "&:hover": {
-                  borderColor: "#8FBC8F",
-                  color: "#8FBC8F",
-                },
-                borderRadius: "20px",
-                padding: "10px 20px",
-              }}
-            >
-              Return To Etherea
-            </Button>
+            <SignUpButton>
+              <Button
+                variant="outlined"
+                sx={{
+                  fontFamily: "Fondamento",
+                  color: "white",
+                  borderColor: "white",
+                  "&:hover": {
+                    borderColor: "#8FBC8F",
+                    color: "#8FBC8F",
+                  },
+                  borderRadius: "20px",
+                  padding: "10px 20px",
+                }}
+              >
+                Begin Your Journey
+              </Button>
+            </SignUpButton>
           </Stack>
         </Container>
       </Box>

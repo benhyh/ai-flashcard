@@ -17,7 +17,7 @@ import SwordIcon from "@mui/icons-material/Gavel";
 import React from "react";
 
 export const Pricing = () => {
-  const handleSubmit = async () => {
+  const handleSubmit = async (subscriptionDetails) => {
     const checkoutSession = await fetch("/api/stripe", {
       method: "POST",
       headers: { origin: "http://localhost:3000" },
