@@ -1,9 +1,9 @@
-import Hero from "@/app/components/Hero";
+import HeroAuth from "@/app/components/HeroAuth";
 
 export default function page() {
   return (
     <>
-      <Hero />
+      <HeroAuth />
     </>
   );
 }
