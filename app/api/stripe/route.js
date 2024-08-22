@@ -39,7 +39,6 @@ export async function POST(req) {
               name: plans[productId].title,
             },
             unit_amount: formatAmountForStripe(19.99, "usd"), // $
-            unit_amount: formatAmountForStripe(plans[productId].price, "usd"), // $10.00
             recurring: {
               interval: "month",
               interval_count: 1,
