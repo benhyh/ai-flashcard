@@ -10,6 +10,22 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 
 export async function POST(req) {
+  const plans = [
+    {
+      title: "Power 1",
+      price: 0.99
+    },
+    {
+      title: "Power 10",
+      price: 9.99
+    },
+    {
+      title: "Power 20",
+      price: 19.99
+    }
+  ];
+  const { productId } = await req.json();
+
   try {
     const params = {
       mode: "subscription",
@@ -19,9 +35,9 @@ export async function POST(req) {
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Power 20",
+              name: plans[productId].title,
             },
-            unit_amount: formatAmountForStripe(19.99, "usd"), // $
+            unit_amount: formatAmountForStripe(plans[productId].price, "usd"), // $10.00
             recurring: {
               interval: "month",
               interval_count: 1,
