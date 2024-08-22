@@ -18,7 +18,6 @@ import React from "react";
 
 export const Pricing = () => {
   const handleSubmit = async(id) => {
-    console.log(id);
     const checkoutSession = await fetch("/api/stripe", {
       method: "POST",
       headers: { origin: "http://localhost:3000" },
