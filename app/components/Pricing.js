@@ -17,10 +17,14 @@ import SwordIcon from "@mui/icons-material/Gavel";
 import React from "react";
 
 export const Pricing = () => {
-  const handleSubmit = async () => {
+  const handleSubmit = async(id) => {
+    console.log(id);
     const checkoutSession = await fetch("/api/stripe", {
       method: "POST",
       headers: { origin: "http://localhost:3000" },
+      body: JSON.stringify({
+        productId: id
+      })
     });
     const checkoutSessionJson = await checkoutSession.json();
 
@@ -36,6 +40,7 @@ export const Pricing = () => {
 
   const plans = [
     {
+      id: 0,
       title: "Power 1",
       price: "$0.99",
       period: "/month",
@@ -47,6 +52,7 @@ export const Pricing = () => {
       color: blue[700],
     },
     {
+      id: 1,
       title: "Power 10",
       price: "$9.99",
       period: "/month",
@@ -58,6 +64,7 @@ export const Pricing = () => {
       color: green[800],
     },
     {
+      id: 2,
       title: "Power 20",
       price: "$19.99",
       period: "/month",
@@ -161,7 +168,7 @@ export const Pricing = () => {
                       opacity: 0.9,
                     },
                   }}
-                  onClick={handleSubmit}
+                  onClick={() => handleSubmit(pack.id)}
                 >
                   Choose Pack
                 </Button>
