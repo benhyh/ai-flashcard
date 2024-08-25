@@ -60,7 +60,7 @@ export const Features = () => {
         align="center"
         fontFamily={"Fondamento"}
         color={"white"}
-        id="features-section"
+        id="features"
       >
         Features
       </Typography>

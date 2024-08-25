@@ -35,7 +35,6 @@ export async function POST(req) {
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Power 20",
               name: plans[productId].title,
             },
             unit_amount: formatAmountForStripe(plans[productId].price, "usd"), // $

@@ -1,7 +1,7 @@
 import { AppBar, Button, Typography, Toolbar, Box, Stack } from "@mui/material";
 import { green } from "@mui/material/colors";
 
-export const Navigation = () => {
+export const NavigationAuth = () => {
   return (
     <AppBar position="sticky" sx={{ bgcolor: "black" }}>
       <Toolbar>
@@ -28,33 +28,9 @@ export const Navigation = () => {
                 color: green[800],
               },
             }}
-            href="#features"
+            href="/"
           >
-            Features
-          </Button>
-          <Button
-            color="inherit"
-            sx={{
-              fontFamily: "Fondamento",
-              "&:hover": {
-                color: green[800],
-              },
-            }}
-            href="#demo"
-          >
-            Demo
-          </Button>
-          <Button
-            color="inherit"
-            sx={{
-              fontFamily: "Fondamento",
-              "&:hover": {
-                color: green[800],
-              },
-            }}
-            href="#pricing"
-          >
-            Pricing
+            Go Back
           </Button>
         </Stack>
       </Toolbar>

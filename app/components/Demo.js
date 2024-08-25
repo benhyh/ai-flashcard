@@ -11,7 +11,7 @@ export const Demo = () => {
       }}
     >
       <Typography
-        id="demo-section"
+        id="demo"
         variant="h4"
         component="h2"
         gutterBottom

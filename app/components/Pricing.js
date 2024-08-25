@@ -42,7 +42,6 @@ export const Pricing = () => {
       id: 0,
       title: "Power 1",
       price: "$0.99",
-      period: "/month",
       features: [
         "100 AI-Powered Talent Cards",
         "One Character Slot",
@@ -54,7 +53,6 @@ export const Pricing = () => {
       id: 1,
       title: "Power 10",
       price: "$9.99",
-      period: "/month",
       features: [
         "1000 AI-Powered Talent Cards",
         "2 Character Slots",
@@ -66,7 +64,6 @@ export const Pricing = () => {
       id: 2,
       title: "Power 20",
       price: "$19.99",
-      period: "/month",
       features: [
         "Unlimited AI-Powered Talent Cards",
         "5 Character Slots",
@@ -93,7 +90,7 @@ export const Pricing = () => {
         align="center"
         fontFamily={"Fondamento"}
         color={"white"}
-        id="pricing-section"
+        id="pricing"
       >
         Pricing
       </Typography>
