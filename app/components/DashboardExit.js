@@ -1,15 +1,9 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { SignOutButton, useAuth, useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 
 const DashboardExit = () => {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
-  const router = useRouter();
-
-  const handleSignOut = () => {
-    router.push("/");
-  };
 
   return (
     <Box
@@ -40,7 +34,7 @@ const DashboardExit = () => {
           </Box>
         </Box>
       )}
-      <SignOutButton signOutCallback={handleSignOut}>
+      <SignOutButton>
         <Button
           variant="contained"
           sx={{
@@ -54,7 +48,6 @@ const DashboardExit = () => {
               backgroundColor: "#374c28",
             },
           }}
-          onClick={handleSignOut}
         >
           Log Out
         </Button>
