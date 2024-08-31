@@ -24,7 +24,7 @@ const Dashboard = () => {
         variant="permanent"
         sx={{
           width: 240,
-          flexShrink: 0,
+          flexShrink: 0,  
           [`& .MuiDrawer-paper`]: {
             width: 240,
             boxSizing: "border-box",

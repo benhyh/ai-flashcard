@@ -1,14 +1,14 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { SignOutButton, useAuth, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const DashboardExit = () => {
-  const { isSignedIn, signOut } = useAuth();
+  const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const router = useRouter();
 
   const handleSignOut = () => {
-    signOut().then(() => {
-      window.location.href = "/";
-    });
+    router.push("/");
   };
 
   return (
@@ -40,23 +40,25 @@ const DashboardExit = () => {
           </Box>
         </Box>
       )}
-      <Button
-        variant="contained"
-        sx={{
-          background: "black",
-          color: "white",
-          backgroundColor: "#4b6a2e",
-          border: "1px solid white",
-          fontFamily: "Fondamento",
-          width: "210px",
-          "&:hover": {
-            backgroundColor: "#374c28",
-          },
-        }}
-        onClick={handleSignOut}
-      >
-        Log Out
-      </Button>
+      <SignOutButton signOutCallback={handleSignOut}>
+        <Button
+          variant="contained"
+          sx={{
+            background: "black",
+            color: "white",
+            backgroundColor: "#4b6a2e",
+            border: "1px solid white",
+            fontFamily: "Fondamento",
+            width: "210px",
+            "&:hover": {
+              backgroundColor: "#374c28",
+            },
+          }}
+          onClick={handleSignOut}
+        >
+          Log Out
+        </Button>
+      </SignOutButton>
     </Box>
   );
 };
