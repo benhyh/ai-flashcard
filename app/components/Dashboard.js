@@ -1,6 +1,8 @@
+"use client";
+
 import React from "react";
 import { AppBar, Toolbar, Drawer, Box } from "@mui/material";
-import { useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/clerk-react";
 import DashboardSide from "./DashboardSide";
 import DashboardExit from "./DashboardExit";
 import DashboardMain from "./DashboardMain";
@@ -24,7 +26,7 @@ const Dashboard = () => {
         variant="permanent"
         sx={{
           width: 240,
-          flexShrink: 0,  
+          flexShrink: 0,
           [`& .MuiDrawer-paper`]: {
             width: 240,
             boxSizing: "border-box",

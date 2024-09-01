@@ -24,6 +24,12 @@ const DashboardSide = () => {
         color: "white",
       }}
     >
+      <Typography
+        variant="h4"
+        sx={{ px: 2, mt: 2, fontFamily: "Fondamento", color: "white" }}
+      >
+        Menu
+      </Typography>
       <List>
         <ListItem button sx={{ mb: 1 }}>
           <ListItemIcon>
@@ -55,8 +61,8 @@ const DashboardSide = () => {
         </ListItem>
       </List>
       <Typography
-        variant="h6"
-        sx={{ px: 2, mt: 2, fontFamily: "Fondamento", color: "white" }}
+        variant="h4"
+        sx={{ px: 2, mt: 20, fontFamily: "Fondamento", color: "white" }}
       >
         Favorites
       </Typography>

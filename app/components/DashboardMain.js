@@ -1,34 +1,19 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  InputBase,
-  Button,
-  Drawer,
-  Box,
-  Paper,
-  Grid,
-} from "@mui/material";
+import { Toolbar, Typography, Button, Box, Paper, Grid } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const DashboardMain = ({ user }) => {
   return (
-    <Box
-      component="main"
-      sx={{ flexGrow: 1, p: 3, color: "white", fontFamily: "Fondamento" }}
-    >
+    <Box component="main" sx={{ flexGrow: 1, p: 3, color: "white" }}>
       <Toolbar />
-      <Typography variant="h4" sx={{ mb: 2 }}>
+      <Typography variant="h3" sx={{ mb: 2, fontFamily: "Fondamento" }}>
         Hi, ...
-      </Typography>
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
-        Welcome back!
       </Typography>
       <Box sx={{ mb: 2 }}>
         <Button
           variant="contained"
+          startIcon={<PlayArrowIcon />}
           sx={{
-            mr: 1,
-            background: "black",
+            padding: 1.5,
             color: "white",
             backgroundColor: "#4b6a2e",
             fontFamily: "Fondamento",
@@ -42,6 +27,8 @@ const DashboardMain = ({ user }) => {
         <Button
           variant="outlined"
           sx={{
+            padding: 1.5,
+            ml: 2,
             color: "white",
             borderColor: "black",
             color: "white",
@@ -56,33 +43,87 @@ const DashboardMain = ({ user }) => {
           + Create
         </Button>
       </Box>
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h6" sx={{ mb: 1 }}>
+      <Paper
+        sx={{
+          p: 3,
+          mb: 2,
+          width: "30vw",
+          height: "15vh",
+          backgroundColor: "transparent",
+          color: "white",
+          border: "2px solid white",
+        }}
+      >
+        <Typography variant="h4" sx={{ mb: 1, fontFamily: "Fondamento" }}>
           Latest Activity
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={3}>
-            <Typography variant="h4">12</Typography>
-            <Typography variant="body2">Total</Typography>
+        <Grid
+          container
+          gap={5}
+          sx={{
+            textAlign: "center",
+            alignItems: "center",
+            mt: 4,
+            ml: 2,
+          }}
+        >
+          <Grid item>
+            <Typography variant="h5" sx={{ fontFamily: "Fondamento" }}>
+              Java
+            </Typography>
           </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h4">2</Typography>
-            <Typography variant="body2">Wrong</Typography>
+          <Grid item xs={1}>
+            <Typography variant="h5" sx={{ fontFamily: "Fondamento" }}>
+              12
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: "Fondamento" }}>
+              Total
+            </Typography>
           </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h4">10</Typography>
-            <Typography variant="body2">Correct</Typography>
+          <Grid item xs={1}>
+            <Typography variant="h5" sx={{ fontFamily: "Fondamento" }}>
+              2
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: "Fondamento" }}>
+              Wrong
+            </Typography>
           </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h4">55%</Typography>
-            <Typography variant="body2">Progress</Typography>
+          <Grid item xs={1}>
+            <Typography variant="h5" sx={{ fontFamily: "Fondamento" }}>
+              10
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: "Fondamento" }}>
+              Correct
+            </Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography variant="h5" sx={{ fontFamily: "Fondamento" }}>
+              55%
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: "Fondamento" }}>
+              Progress
+            </Typography>
+          </Grid>
+          <Grid item xs={1} sx={{ ml: 2 }}>
+            <Button
+              variant="contained"
+              startIcon={<PlayArrowIcon />}
+              sx={{
+                padding: 1.5,
+                color: "white",
+                backgroundColor: "#4b6a2e",
+                fontFamily: "Fondamento",
+                "&:hover": {
+                  backgroundColor: "#374c28",
+                },
+              }}
+            >
+              Play
+            </Button>
           </Grid>
         </Grid>
-        <Button variant="contained" sx={{ mt: 2 }}>
-          Play
-        </Button>
       </Paper>
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography variant="h4" sx={{ mb: 2, fontFamily: "Fondamento" }}>
         Folders
       </Typography>
       {/* Add your folder components here */}

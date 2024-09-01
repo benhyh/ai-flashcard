@@ -3,8 +3,6 @@ import { Navigation } from "./Navigation";
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
 
 export const Hero = () => {
-  const { isSignedIn, signOut } = useAuth();
-
   return (
     <>
       <Navigation />
