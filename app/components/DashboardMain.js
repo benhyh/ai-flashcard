@@ -1,7 +1,26 @@
-import { Toolbar, Typography, Button, Box, Paper, Grid } from "@mui/material";
+import {
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Paper,
+  Grid,
+  Card,
+  Modal,
+} from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import AddIcon from "@mui/icons-material/Add";
+import { Folder } from "@mui/icons-material";
+import { useState } from "react";
+import ModalBox from "./ModalBox";
 
 const DashboardMain = ({ user }) => {
+  const [open, setOpen] = useState(false); // Modal box handling state.
+  const [folderName, setFolder] = useState("");
+
+  const handleOpen = () => setOpen(true); // Handle open.
+  const handleClose = () => setOpen(false); // Handle close.
+
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, color: "white" }}>
       <Toolbar />
@@ -26,6 +45,7 @@ const DashboardMain = ({ user }) => {
         </Button>
         <Button
           variant="outlined"
+          startIcon={<AddIcon />}
           sx={{
             padding: 1.5,
             ml: 2,
@@ -39,9 +59,19 @@ const DashboardMain = ({ user }) => {
               color: "#8FBC8F",
             },
           }}
+          onClick={() => {
+            handleOpen();
+          }}
         >
-          + Create
+          Create
         </Button>
+        <Modal open={open} onClose={handleClose}>
+          <ModalBox
+            folderName={folderName}
+            setFolder={setFolder}
+            onClose={handleClose}
+          />
+        </Modal>
       </Box>
       <Paper
         sx={{
@@ -126,6 +156,24 @@ const DashboardMain = ({ user }) => {
       <Typography variant="h4" sx={{ mb: 2, fontFamily: "Fondamento" }}>
         Folders
       </Typography>
+      <Card
+        variant="outlined"
+        sx={{
+          width: "150px",
+          height: "150px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#4b6a2e",
+          border: "2px solid white",
+        }}
+      >
+        <Folder sx={{ fontSize: 60, color: "white" }} />
+        <Typography variant="body2" sx={{ mt: 1, color: "white" }}>
+          New Folder
+        </Typography>
+      </Card>
       {/* Add your folder components here */}
     </Box>
   );

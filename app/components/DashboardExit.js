@@ -28,7 +28,10 @@ const DashboardExit = () => {
             >
               {user.firstName} {user.lastName}
             </Typography>
-            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.7)" }}>
+            <Typography
+              variant="body2"
+              sx={{ color: "rgba(255,255,255,0.7)", fontFamily: "Fondamento" }}
+            >
               {user.emailAddresses[0].emailAddress}
             </Typography>
           </Box>
