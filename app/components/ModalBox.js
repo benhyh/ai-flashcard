@@ -1,15 +1,15 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 
-const ModalBox = ({ setFolder, handleClose, addFolder, folder }) => {
-  const handleCreateFolder = () => {
-    addFolder(folder);
-    setFolder("");
+const ModalBox = ({ setDeck, handleClose, addDeck, deck }) => {
+  const handleCreateDeck = () => {
+    addDeck(deck);
+    setDeck("");
     handleClose();
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      handleCreateFolder();
+      handleCreateDeck();
     }
   };
 
@@ -32,15 +32,15 @@ const ModalBox = ({ setFolder, handleClose, addFolder, folder }) => {
       }}
     >
       <Typography variant="h6" color="white" fontFamily="Fondamento">
-        Create new folder
+        Create new deck
       </Typography>
       <Stack width="100%" direction="row" spacing={2}>
         <TextField
           variant="outlined"
           fullWidth
-          value={folder}
-          placeholder="Enter folder name..."
-          onChange={(e) => setFolder(e.target.value)}
+          value={deck}
+          placeholder="Enter deck name..."
+          onChange={(e) => setDeck(e.target.value)}
           onKeyPress={handleKeyPress}
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -62,7 +62,7 @@ const ModalBox = ({ setFolder, handleClose, addFolder, folder }) => {
         />
         <Button
           variant="outlined"
-          onClick={handleCreateFolder}
+          onClick={handleCreateDeck}
           sx={{
             borderColor: "white",
             color: "white",

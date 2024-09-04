@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppBar, Toolbar, Drawer, Box } from "@mui/material";
 import { useUser } from "@clerk/clerk-react";
 import DashboardSide from "./DashboardSide";
@@ -16,67 +16,77 @@ import {
   getDocs,
   query,
   setDoc,
+  Timestamp,
 } from "firebase/firestore";
 
 const Dashboard = () => {
   const { isLoaded, user } = useUser();
-  const [folderName, setFolderName] = useState([]);
-  const [folder, setFolder] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [deckName, setDeckName] = useState([]);
+  const [deck, setDeck] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // Search box.
   const [open, setOpen] = useState(false); // Modal box handling state.
 
   const handleOpen = () => setOpen(true); // Handle open.
   const handleClose = () => setOpen(false); // Handle close.
 
   // Fetching data from Firebase and updating it
-  const updateFolder = async () => {
+  const updateDeck = async () => {
     const snapshot = query(collection(fireStore, "folders"));
     const documents = await getDocs(snapshot);
-    const folderList = [];
-    documents.forEach((document) => {
-      folderList.push({
-        name: document.id,
-        ...document.data(),
+    const deckList = [];
+    documents.docs.map((doc) => {
+      deckList.push({
+        name: doc.id,
+        ...doc.data(),
       });
     });
-    setFolderName(folderList);
+    setDeckName(deckList);
   };
 
-  // Create folder
-  const addFolder = async (item) => {
-    const docRef = doc(collection(fireStore, "folders"), item);
+  // Create deck
+  const addDeck = async (folder) => {
+    const docRef = doc(collection(fireStore, "folders"), folder);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      await setDoc(docRef);
-    }
+    if (!docSnap.exists()) {
+      const newFolderData = {
+        createdAt: Timestamp.now(),
+        name: folder,
+        parent: "home",
+        path: [],
+      };
 
-    await updateFolder();
+      await setDoc(docRef, newFolderData);
+      await updateDeck();
+    } else {
+      console.log("Folder already exists.");
+    }
   };
 
-  // Delete folder
-  const deleteFolder = async (item) => {
-    const docRef = doc(collection(fireStore, "folders"), item);
+  // Delete deck
+  const deleteDeck = async (folder) => {
+    const docRef = doc(collection(fireStore, "folders"), folder);
     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      await deleteDoc(docRef);
-    }
-
-    await updateFolder();
+    await deleteDoc(docSnap);
+    await updateDeck();
   };
 
-  // Search functionality
+  // Search
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredItems = folderName.filter((item) =>
+  const filteredItems = deckName.filter((item) =>
     item.name
       .toLowerCase()
       .split(" ")
       .some((word) => word.startsWith(searchQuery.toLowerCase()))
   );
+
+  useEffect(() => {
+    updateDeck();
+  }, []);
 
   // For loading state for clerk auth.
   if (!isLoaded) {
@@ -96,8 +106,8 @@ const Dashboard = () => {
           open={open}
           handleClose={handleClose}
           handleOpen={handleOpen}
-          setFolder={setFolder}
-          addFolder={addFolder}
+          setDeck={setDeck}
+          addDeck={addDeck}
         />
       </AppBar>
       <Drawer
@@ -117,13 +127,15 @@ const Dashboard = () => {
       </Drawer>
       <DashboardMain
         user={user}
-        folder={folder}
-        setFolder={setFolder}
-        addFolder={addFolder}
+        deck={deck}
+        setDeck={setDeck}
+        addDeck={addDeck}
         open={open}
         setOpen={setOpen}
         handleOpen={handleOpen}
         handleClose={handleClose}
+        deckName={deckName}
+        deleteDeck={deleteDeck}
       />
     </Box>
   );

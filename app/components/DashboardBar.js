@@ -13,8 +13,8 @@ import ModalBox from "./ModalBox";
 export const DashboardBar = ({
   open,
   handleClose,
-  setFolder,
-  addFolder,
+  setDeck,
+  addDeck,
   handleOpen,
   folder,
 }) => {
@@ -82,8 +82,8 @@ export const DashboardBar = ({
         <Modal open={open} onClose={handleClose}>
           <ModalBox
             handleClose={handleClose}
-            setFolder={setFolder}
-            addFolder={addFolder}
+            setDeck={setDeck}
+            addDeck={addDeck}
             folder={folder}
           />
         </Modal>

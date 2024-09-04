@@ -6,10 +6,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "WokenAI",
-  description: "WokenAI - An AI-powered flashcard generator for Deepwoken",
-  icons: {
-    // create different sizes of the deepwoken logo (favicon) and put it here
-  },
+  description:
+    "WokenAI - An AI-powered flashcard generator inspired by Deepwoken",
 };
 
 export default function RootLayout({ children }) {

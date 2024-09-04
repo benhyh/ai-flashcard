@@ -56,7 +56,7 @@ const DashboardSide = () => {
               color: "white",
             }}
           >
-            Folders
+            Decks
           </Typography>
         </ListItem>
       </List>

@@ -6,20 +6,23 @@ import {
   Paper,
   Grid,
   Modal,
+  IconButton,
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AddIcon from "@mui/icons-material/Add";
-import { Folder } from "@mui/icons-material";
+import { Delete, Folder } from "@mui/icons-material";
 import ModalBox from "./ModalBox";
 
 const DashboardMain = ({
   user,
-  setFolder,
-  folder,
-  addFolder,
+  setDeck,
+  deck,
+  addDeck,
   open,
   handleOpen,
   handleClose,
+  deckName,
+  deleteDeck,
 }) => {
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, color: "white" }}>
@@ -68,9 +71,9 @@ const DashboardMain = ({
         <Modal open={open} onClose={handleClose}>
           <ModalBox
             handleClose={handleClose}
-            setFolder={setFolder}
-            addFolder={addFolder}
-            folder={folder}
+            setDeck={setDeck}
+            addDeck={addDeck}
+            deck={deck}
           />
         </Modal>
       </Box>
@@ -155,31 +158,58 @@ const DashboardMain = ({
         </Grid>
       </Paper>
       <Typography variant="h4" sx={{ mb: 2, fontFamily: "Fondamento" }}>
-        Folders
+        Decks
       </Typography>
-      <Button
-        variant="contained"
-        sx={{
-          width: "150px",
-          height: "150px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#4b6a2e",
-          border: "2px solid white",
-          "&:hover": {
-            border: "2px solid white",
-            backgroundColor: "#4b6a2e",
-          },
-        }}
+      <Grid
+        container
+        gap={5}
+        sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
-        <Folder sx={{ fontSize: 60, color: "white" }} />
-        <Typography variant="body2" sx={{ mt: 1, color: "white" }}>
-          New Folder
-        </Typography>
-      </Button>
-      {/* Add your folder components here */}
+        {deckName.map((deck, index) => (
+          <Button
+            key={index}
+            variant="contained"
+            sx={{
+              width: "150px",
+              height: "150px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#4b6a2e",
+              border: "2px solid white",
+
+              "&:hover": {
+                border: "2px solid white",
+                backgroundColor: "#4b6a2e",
+              },
+            }}
+          >
+            <IconButton
+              size="small"
+              sx={{
+                position: "absolute",
+                top: 5,
+                right: 5,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteDeck(deck);
+              }}
+            >
+              <Delete fontSize="small" />
+            </IconButton>
+            <Folder sx={{ fontSize: 60, color: "white" }} />
+            <Typography variant="body2" sx={{ mt: 1, color: "white" }}>
+              {deck.name}
+            </Typography>
+          </Button>
+        ))}
+      </Grid>
     </Box>
   );
 };
