@@ -5,10 +5,19 @@ import {
   Toolbar,
   Box,
   InputBase,
+  Modal,
 } from "@mui/material";
 import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material";
+import ModalBox from "./ModalBox";
 
-export const DashboardBar = () => {
+export const DashboardBar = ({
+  open,
+  handleClose,
+  setFolder,
+  addFolder,
+  handleOpen,
+  folder,
+}) => {
   return (
     <AppBar position="sticky" sx={{ bgcolor: "black" }}>
       <Toolbar>
@@ -64,9 +73,20 @@ export const DashboardBar = () => {
               backgroundColor: "#374c28",
             },
           }}
+          onClick={() => {
+            handleOpen();
+          }}
         >
-          Add
+          Create
         </Button>
+        <Modal open={open} onClose={handleClose}>
+          <ModalBox
+            handleClose={handleClose}
+            setFolder={setFolder}
+            addFolder={addFolder}
+            folder={folder}
+          />
+        </Modal>
       </Toolbar>
     </AppBar>
   );
