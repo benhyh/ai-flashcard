@@ -14,7 +14,7 @@ import {
   Star as StarIcon,
 } from "@mui/icons-material";
 
-const DashboardSide = () => {
+export const DashboardSide = () => {
   return (
     <Box
       sx={{
@@ -87,5 +87,3 @@ const DashboardSide = () => {
     </Box>
   );
 };
-
-export default DashboardSide;

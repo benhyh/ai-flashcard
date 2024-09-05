@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Dashboard from "../components/Dashboard";
+import { useUser } from "@clerk/nextjs";
+import Dashboard from "./Dashboard";
 
 export default function DashboardPage() {
   const [text, setText] = useState("");
   const [flashcards, setFlashcards] = useState([]);
+  const { user, isLoaded } = useUser();
 
   const handleSubmit = async () => {
     if (!text.trim()) {
@@ -31,11 +33,14 @@ export default function DashboardPage() {
     }
   };
 
+  // For loading state for clerk auth.
+  if (!isLoaded) {
+    return null;
+  }
+
   return (
     <div>
-      <Dashboard />
-
-      {/* Add flashcard display here*/}
+      <Dashboard user={user} isLoaded={isLoaded} />
     </div>
   );
 }

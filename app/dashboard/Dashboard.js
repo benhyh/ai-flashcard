@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { AppBar, Toolbar, Drawer, Box } from "@mui/material";
-import { useUser } from "@clerk/clerk-react";
-import DashboardSide from "./DashboardSide";
-import DashboardExit from "./DashboardExit";
-import DashboardMain from "./DashboardMain";
+import { DashboardSide } from "./DashboardSide";
+import { DashboardExit } from "./DashboardExit";
+import { DashboardMain } from "./DashboardMain";
 import { DashboardBar } from "./DashboardBar";
 import { fireStore } from "@/firebase";
 import {
@@ -19,8 +18,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-const Dashboard = () => {
-  const { isLoaded, user } = useUser();
+const Dashboard = ({ user, isLoaded }) => {
   const [deckName, setDeckName] = useState([]);
   const [deck, setDeck] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // Search box.
@@ -65,11 +63,13 @@ const Dashboard = () => {
 
   // Delete deck
   const deleteDeck = async (folder) => {
-    const docRef = doc(collection(fireStore, "folders"), folder);
-    const docSnap = await getDoc(docRef);
-
-    await deleteDoc(docSnap);
-    await updateDeck();
+    try {
+      const docRef = doc(collection(fireStore, "folders"), folder);
+      await deleteDoc(docRef);
+      await updateDeck();
+    } catch (error) {
+      console.error("Error deleting deck:", error);
+    }
   };
 
   // Search
@@ -87,11 +87,6 @@ const Dashboard = () => {
   useEffect(() => {
     updateDeck();
   }, []);
-
-  // For loading state for clerk auth.
-  if (!isLoaded) {
-    return null;
-  }
 
   return (
     <Box sx={{ display: "flex" }}>

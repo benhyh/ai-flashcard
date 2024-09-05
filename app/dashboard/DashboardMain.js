@@ -13,7 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Delete, Folder } from "@mui/icons-material";
 import ModalBox from "./ModalBox";
 
-const DashboardMain = ({
+export const DashboardMain = ({
   user,
   setDeck,
   deck,
@@ -198,7 +198,7 @@ const DashboardMain = ({
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                deleteDeck(deck);
+                deleteDeck(deck.name);
               }}
             >
               <Delete fontSize="small" />
@@ -213,5 +213,3 @@ const DashboardMain = ({
     </Box>
   );
 };
-
-export default DashboardMain;

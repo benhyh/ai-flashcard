@@ -1,4 +1,4 @@
-import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Navigation } from "./Navigation";
 import { Box, Container, Typography, Button, Stack } from "@mui/material";
 

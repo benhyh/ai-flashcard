@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { SignOutButton, useAuth, useUser } from "@clerk/nextjs";
 
-const DashboardExit = () => {
+export const DashboardExit = () => {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
 
@@ -58,5 +58,3 @@ const DashboardExit = () => {
     </Box>
   );
 };
-
-export default DashboardExit;
