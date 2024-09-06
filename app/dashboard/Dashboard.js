@@ -42,14 +42,16 @@ const Dashboard = ({ user, isLoaded }) => {
   };
 
   // Create deck
-  const addDeck = async (folder) => {
-    const docRef = doc(collection(fireStore, "folders"), folder);
+  const addDeck = async (deck) => {
+    const docRef = doc(collection(fireStore, "folders"), deck);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
       const newFolderData = {
         createdAt: Timestamp.now(),
-        name: folder,
+        createdBy: user.fullName,
+        userID: user.id,
+        name: deck,
         parent: "home",
         path: [],
       };
@@ -113,6 +115,7 @@ const Dashboard = ({ user, isLoaded }) => {
           [`& .MuiDrawer-paper`]: {
             width: 240,
             boxSizing: "border-box",
+            border: "none",
           },
         }}
       >

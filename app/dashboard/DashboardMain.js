@@ -204,7 +204,10 @@ export const DashboardMain = ({
               <Delete fontSize="small" />
             </IconButton>
             <Folder sx={{ fontSize: 60, color: "white" }} />
-            <Typography variant="body2" sx={{ mt: 1, color: "white" }}>
+            <Typography
+              variant="body2"
+              sx={{ mt: 1, color: "white", textTransform: "none" }}
+            >
               {deck.name}
             </Typography>
           </Button>
