@@ -23,6 +23,7 @@ export const DashboardMain = ({
   handleClose,
   deckName,
   deleteDeck,
+  deckClick,
 }) => {
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, color: "white" }}>
@@ -184,6 +185,7 @@ export const DashboardMain = ({
                 backgroundColor: "#4b6a2e",
               },
             }}
+            onClick={() => deckClick(deck.name)}
           >
             <IconButton
               size="small"
@@ -206,7 +208,12 @@ export const DashboardMain = ({
             <Folder sx={{ fontSize: 60, color: "white" }} />
             <Typography
               variant="body2"
-              sx={{ mt: 1, color: "white", textTransform: "none" }}
+              sx={{
+                mt: 1,
+                color: "white",
+                textTransform: "none",
+                fontFamily: "Fondamento",
+              }}
             >
               {deck.name}
             </Typography>

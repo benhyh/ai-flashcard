@@ -6,75 +6,42 @@ import { DashboardSide } from "./DashboardSide";
 import { DashboardExit } from "./DashboardExit";
 import { DashboardMain } from "./DashboardMain";
 import { DashboardBar } from "./DashboardBar";
-import { fireStore } from "@/firebase";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { updateDeck, addDeck, deleteDeck } from "@/utils/firebaseFunctions";
+import { useRouter } from "next/navigation";
 
 const Dashboard = ({ user, isLoaded }) => {
   const [deckName, setDeckName] = useState([]);
   const [deck, setDeck] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); // Search box.
-  const [open, setOpen] = useState(false); // Modal box handling state.
+  const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
-  const handleOpen = () => setOpen(true); // Handle open.
-  const handleClose = () => setOpen(false); // Handle close.
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  // Fetching data from Firebase and updating it
-  const updateDeck = async () => {
-    const snapshot = query(collection(fireStore, "folders"));
-    const documents = await getDocs(snapshot);
-    const deckList = [];
-    documents.docs.map((doc) => {
-      deckList.push({
-        name: doc.id,
-        ...doc.data(),
-      });
-    });
+  const handleDeckClick = (deckName) => {
+    router.push(`/dashboard/deck/${deckName}`);
+  };
+
+  const fetchDecks = async () => {
+    const deckList = await updateDeck();
     setDeckName(deckList);
   };
 
-  // Create deck
-  const addDeck = async (deck) => {
-    const docRef = doc(collection(fireStore, "folders"), deck);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      const newFolderData = {
-        createdAt: Timestamp.now(),
-        createdBy: user.fullName,
-        userID: user.id,
-        name: deck,
-        parent: "home",
-        path: [],
-      };
-
-      await setDoc(docRef, newFolderData);
-      await updateDeck();
-    } else {
-      console.log("Folder already exists.");
-    }
+  const handleAddDeck = async (deck) => {
+    const updatedDecks = await addDeck(deck, user);
+    if (updatedDecks) setDeckName(updatedDecks);
   };
 
-  // Delete deck
-  const deleteDeck = async (folder) => {
+  const handleDeleteDeck = async (folder) => {
     try {
-      const docRef = doc(collection(fireStore, "folders"), folder);
-      await deleteDoc(docRef);
-      await updateDeck();
+      const updatedDecks = await deleteDeck(folder);
+      if (updatedDecks) setDeckName(updatedDecks);
     } catch (error) {
       console.error("Error deleting deck:", error);
     }
   };
 
-  // Search
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -87,7 +54,7 @@ const Dashboard = ({ user, isLoaded }) => {
   );
 
   useEffect(() => {
-    updateDeck();
+    fetchDecks();
   }, []);
 
   return (
@@ -104,7 +71,7 @@ const Dashboard = ({ user, isLoaded }) => {
           handleClose={handleClose}
           handleOpen={handleOpen}
           setDeck={setDeck}
-          addDeck={addDeck}
+          addDeck={handleAddDeck}
         />
       </AppBar>
       <Drawer
@@ -112,7 +79,7 @@ const Dashboard = ({ user, isLoaded }) => {
         sx={{
           width: 240,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
+          "& .MuiDrawer-paper": {
             width: 240,
             boxSizing: "border-box",
             border: "none",
@@ -127,13 +94,14 @@ const Dashboard = ({ user, isLoaded }) => {
         user={user}
         deck={deck}
         setDeck={setDeck}
-        addDeck={addDeck}
+        addDeck={handleAddDeck}
         open={open}
         setOpen={setOpen}
         handleOpen={handleOpen}
         handleClose={handleClose}
         deckName={deckName}
-        deleteDeck={deleteDeck}
+        deleteDeck={handleDeleteDeck}
+        deckClick={handleDeckClick}
       />
     </Box>
   );
