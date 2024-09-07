@@ -2,10 +2,10 @@ import React from "react";
 import {
   Typography,
   List,
-  ListItem,
   ListItemIcon,
   ListItemText,
   Box,
+  ListItemButton,
 } from "@mui/material";
 
 import {
@@ -14,7 +14,7 @@ import {
   Star as StarIcon,
 } from "@mui/icons-material";
 
-export const DashboardSide = () => {
+export const DashboardSide = ({ handleHomeClick }) => {
   return (
     <Box
       sx={{
@@ -31,7 +31,7 @@ export const DashboardSide = () => {
         Menu
       </Typography>
       <List>
-        <ListItem button sx={{ mb: 1 }}>
+        <ListItemButton onClick={handleHomeClick} sx={{ mb: 1 }}>
           <ListItemIcon>
             <HomeIcon sx={{ color: "white" }} />
           </ListItemIcon>
@@ -44,8 +44,8 @@ export const DashboardSide = () => {
           >
             Home
           </Typography>
-        </ListItem>
-        <ListItem button>
+        </ListItemButton>
+        <ListItemButton>
           <ListItemIcon>
             <FolderIcon sx={{ color: "white" }} />
           </ListItemIcon>
@@ -58,7 +58,7 @@ export const DashboardSide = () => {
           >
             Decks
           </Typography>
-        </ListItem>
+        </ListItemButton>
       </List>
       <Typography
         variant="h4"
@@ -68,7 +68,7 @@ export const DashboardSide = () => {
       </Typography>
       <List>
         {["General", "Java", "Codes"].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItemButton key={text}>
             <ListItemIcon>
               <StarIcon sx={{ color: "white" }} />
             </ListItemIcon>
@@ -81,7 +81,7 @@ export const DashboardSide = () => {
                 },
               }}
             />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Box>

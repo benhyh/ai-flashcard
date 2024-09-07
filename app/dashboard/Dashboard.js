@@ -7,21 +7,17 @@ import { DashboardExit } from "./DashboardExit";
 import { DashboardMain } from "./DashboardMain";
 import { DashboardBar } from "./DashboardBar";
 import { updateDeck, addDeck, deleteDeck } from "@/utils/firebaseFunctions";
-import { useRouter } from "next/navigation";
+import { useNavigationUtils } from "@/utils/navigationUtils";
 
 const Dashboard = ({ user, isLoaded }) => {
   const [deckName, setDeckName] = useState([]);
   const [deck, setDeck] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const { handleDeckClick } = useNavigationUtils();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const handleDeckClick = (deckName) => {
-    router.push(`/dashboard/deck/${deckName}`);
-  };
 
   const fetchDecks = async () => {
     const deckList = await updateDeck();
