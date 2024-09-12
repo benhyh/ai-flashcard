@@ -3,9 +3,9 @@ import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ModalBox = ({ setDeck, handleClose, addDeck, deck }) => {
-  const handleCreateDeck = () => {
-    if (deck.trim() === "") {
+const ModalBox = ({ onSubmit, handleClose, onChange, value }) => {
+  const handleCreate = () => {
+    if (value.trim() === "") {
       toast.error("Deck name cannot be empty!", {
         position: "top-center",
         autoClose: 5000,
@@ -27,7 +27,7 @@ const ModalBox = ({ setDeck, handleClose, addDeck, deck }) => {
       return;
     }
 
-    if (deck.trim().length > 10) {
+    if (value.trim().length > 10) {
       toast.error("Deck name must be less than 10 characters!", {
         position: "top-center",
         autoClose: 5000,
@@ -49,14 +49,14 @@ const ModalBox = ({ setDeck, handleClose, addDeck, deck }) => {
       return;
     }
 
-    addDeck(deck);
-    setDeck("");
+    onSubmit(value);
+    onChange("");
     handleClose();
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      handleCreateDeck();
+      handleCreate();
     }
   };
 
@@ -87,9 +87,9 @@ const ModalBox = ({ setDeck, handleClose, addDeck, deck }) => {
           <TextField
             variant="outlined"
             fullWidth
-            value={deck}
-            placeholder="Enter deck name..."
-            onChange={(e) => setDeck(e.target.value)}
+            value={value}
+            placeholder="Enter name..."
+            onChange={(e) => onChange(e.target.value)}
             onKeyPress={handleKeyPress}
             sx={{
               "& .MuiOutlinedInput-root": {
@@ -111,7 +111,7 @@ const ModalBox = ({ setDeck, handleClose, addDeck, deck }) => {
           />
           <Button
             variant="outlined"
-            onClick={handleCreateDeck}
+            onClick={handleCreate}
             sx={{
               borderColor: "white",
               color: "white",

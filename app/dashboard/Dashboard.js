@@ -9,7 +9,7 @@ import { DashboardBar } from "./DashboardBar";
 import { updateDeck, addDeck, deleteDeck } from "@/utils/firebaseFunctions";
 import { useNavigationUtils } from "@/utils/navigationUtils";
 
-const Dashboard = ({ user, isLoaded }) => {
+const Dashboard = ({ user }) => {
   const [deckName, setDeckName] = useState([]);
   const [deck, setDeck] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,9 +29,9 @@ const Dashboard = ({ user, isLoaded }) => {
     if (updatedDecks) setDeckName(updatedDecks);
   };
 
-  const handleDeleteDeck = async (folder) => {
+  const handleDeleteDeck = async (deck) => {
     try {
-      const updatedDecks = await deleteDeck(folder);
+      const updatedDecks = await deleteDeck(deck);
       if (updatedDecks) setDeckName(updatedDecks);
     } catch (error) {
       console.error("Error deleting deck:", error);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import {
   AppBar,
@@ -12,8 +12,7 @@ import {
   Paper,
   LinearProgress,
   IconButton,
-  Tabs,
-  Tab,
+  Modal,
 } from "@mui/material";
 import { Star, Plus, Pencil, Trash, Play } from "lucide-react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -22,17 +21,49 @@ import { DashboardBar } from "../../DashboardBar";
 import { DashboardSide } from "../../DashboardSide";
 import { DashboardExit } from "../../DashboardExit";
 import { useNavigationUtils } from "@/utils/navigationUtils";
+import ModalBox from "../../ModalBox";
+import {
+  updateSubDeck,
+  addSubDeck,
+  deleteSubDeck,
+} from "@/utils/firebaseFunctions";
 
 export default function DeckPage() {
   const { deckName } = useParams();
-  const [flashcards, setFlashcards] = useState([]);
-  const [text, setText] = useState("");
-  const [tabValue, setTabValue] = useState("decks");
+  const [subDeckName, setSubDeckName] = useState([]);
+  const [subDeck, setSubDeck] = useState("");
+  const [open, setOpen] = useState(false);
   const { handleHomeClick } = useNavigationUtils();
 
-  useEffect(() => {
-    // Implement fetching flashcards for the specific deck
+  const [flashcards, setFlashcards] = useState([]);
+  const [text, setText] = useState("");
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const fetchSubDecks = useCallback(async () => {
+    const subDeckList = await updateSubDeck(deckName);
+    if (subDeckList) setSubDeckName(subDeckList);
   }, [deckName]);
+
+  const handleAddSubDeck = async (subDeck) => {
+    const updatedDecks = await addSubDeck(deckName, subDeck);
+    fetchSubDecks();
+    if (updatedDecks) setSubDeckName(updatedDecks);
+  };
+
+  const handleDeleteDeck = async (subDeck) => {
+    try {
+      const updatedDecks = await deleteSubDeck(subDeck);
+      if (updatedDecks) setSubDeckName(updatedDecks);
+    } catch (error) {
+      console.error("Error deleting decks:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubDecks();
+  }, [fetchSubDecks]);
 
   const createFlashcard = async () => {
     if (!text.trim()) {
@@ -56,10 +87,6 @@ export default function DeckPage() {
       console.error("Error generating flashcards:", error);
       alert("An error occurred while generating flashcards. Please try again.");
     }
-  };
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
   };
 
   return (
@@ -114,7 +141,7 @@ export default function DeckPage() {
                 sx={{ fontFamily: "Fondamento", opacity: "0.8" }}
                 color="white"
               >
-                Time Spent: 10 minutes | Total Decks: 1 Deck Created
+                Time Spent: 10 minutes
               </Typography>
             </Box>
             <Box sx={{ display: "flex", mt: { xs: 2, sm: 0 } }}>
@@ -165,14 +192,18 @@ export default function DeckPage() {
             >
               New Deck
             </Button>
+            <Modal open={open} onClose={handleClose}>
+              <ModalBox
+                handleClose={handleClose}
+                value={subDeck}
+                onSubmit={handleAddSubDeck}
+                onChange={setSubDeck}
+              />
+            </Modal>
           </Box>
 
-          <Paper sx={{ mb: 3 }}>
-            <Tabs value={tabValue} onChange={handleTabChange}>
-              <Tab label="Decks" value="decks" />
-              <Tab label="Details" value="details" />
-            </Tabs>
-            {tabValue === "decks" && (
+          {subDeckName.map((subDeck, index) => (
+            <Paper sx={{ mb: 3 }} key={index}>
               <Box sx={{ p: 2 }}>
                 <Box
                   sx={{
@@ -210,10 +241,19 @@ export default function DeckPage() {
                       </Button>
                     </Box>
                     <Box>
-                      <Typography variant="subtitle1" fontWeight="medium">
-                        General Cards
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        sx={{ fontFamily: "fondamento" }}
+                      >
+                        {subDeck.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        fontWeight="bold"
+                        sx={{ fontFamily: "Fondamento" }}
+                      >
                         30 Cards Out Of 80 Were Studied
                       </Typography>
                     </Box>
@@ -233,16 +273,18 @@ export default function DeckPage() {
                 <LinearProgress
                   variant="determinate"
                   value={37.5}
-                  sx={{ height: 8, borderRadius: 4 }}
+                  sx={{
+                    height: 8,
+                    borderRadius: 4,
+                    "& .MuiLinearProgress-bar": {
+                      backgroundColor: "black", // Color of the progress bar
+                    },
+                    backgroundColor: "gray", // Color of the background bar
+                  }}
                 />
               </Box>
-            )}
-            {tabValue === "details" && (
-              <Box sx={{ p: 2 }}>
-                <Typography>Deck details go here...</Typography>
-              </Box>
-            )}
-          </Paper>
+            </Paper>
+          ))}
         </Box>
       </Box>
     </Box>

@@ -72,9 +72,9 @@ export const DashboardMain = ({
         <Modal open={open} onClose={handleClose}>
           <ModalBox
             handleClose={handleClose}
-            setDeck={setDeck}
-            addDeck={addDeck}
-            deck={deck}
+            onChange={setDeck}
+            onSubmit={addDeck}
+            value={deck}
           />
         </Modal>
       </Box>

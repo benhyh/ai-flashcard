@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -23,6 +24,22 @@ export const updateDeck = async () => {
   return deckList;
 };
 
+export const updateSubDeck = async (deckName) => {
+  const deckDocRef = doc(fireStore, "folders", deckName);
+  const subDecksCollectionRef = collection(deckDocRef, "subDecks");
+  const snapshot = query(subDecksCollectionRef);
+  const subDocuments = await getDocs(snapshot);
+  const subDeckList = [];
+  subDocuments.forEach((doc) => {
+    subDeckList.push({
+      id: doc.id,
+      name: doc.data().name || doc.id,
+      ...doc.data(),
+    });
+  });
+  return subDeckList;
+};
+
 export const addDeck = async (deck, user) => {
   const docRef = doc(collection(fireStore, "folders"), deck);
   const docSnap = await getDoc(docRef);
@@ -33,7 +50,7 @@ export const addDeck = async (deck, user) => {
       createdBy: user.fullName,
       userID: user.id,
       name: deck,
-      parent: "home",
+      parent: "folders",
       path: [],
     };
 
@@ -45,11 +62,36 @@ export const addDeck = async (deck, user) => {
   }
 };
 
-export const deleteDeck = async (folder) => {
+export const addSubDeck = async (deckName, subDeckName) => {
+  const deckDocRef = doc(fireStore, "folders", deckName);
+  const subDecksCollectionRef = collection(deckDocRef, "subDecks");
+  await addDoc(subDecksCollectionRef, {
+    name: subDeckName,
+    parent: deckName,
+    createdAt: Timestamp.now(),
+  });
+  return updateSubDeck(deckName);
+};
+
+export const deleteDeck = async (deck) => {
   try {
-    const docRef = doc(collection(fireStore, "folders"), folder);
+    const docRef = doc(collection(fireStore, "folders"), deck);
     await deleteDoc(docRef);
     return await updateDeck();
+  } catch (error) {
+    console.error("Error deleting deck:", error);
+    throw error;
+  }
+};
+
+export const deleteSubDeck = async (deck, subDeck) => {
+  try {
+    const docRef = doc(
+      collection(doc(fireStore, "folders", deck), deck),
+      subDeck
+    );
+    await deleteDoc(docRef);
+    return await updateSubDeck();
   } catch (error) {
     console.error("Error deleting deck:", error);
     throw error;
