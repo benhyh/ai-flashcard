@@ -34,59 +34,6 @@ export const DashboardBar = ({
         >
           WokenAI
         </Typography>
-        <div
-          style={{
-            position: "relative",
-            borderRadius: "4px",
-            backgroundColor: "rgba(255, 255, 255, 0.15)",
-            marginRight: "16px",
-          }}
-        >
-          <SearchIcon
-            sx={{
-              position: "absolute",
-              pointerEvents: "none",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-              padding: "0 16px",
-            }}
-          />
-          <InputBase
-            placeholder="Search…"
-            sx={{
-              color: "inherit",
-              padding: "8px 8px 8px 48px",
-              width: "100%",
-              fontFamily: "Fondamento",
-            }}
-          />
-        </div>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{
-            fontFamily: "Fondamento",
-            backgroundColor: "#4b6a2e",
-            "&:hover": {
-              backgroundColor: "#374c28",
-            },
-          }}
-          onClick={() => {
-            handleOpen();
-          }}
-        >
-          Create
-        </Button>
-        <Modal open={open} onClose={handleClose}>
-          <ModalBox
-            handleClose={handleClose}
-            setDeck={setDeck}
-            addDeck={addDeck}
-            folder={folder}
-          />
-        </Modal>
       </Toolbar>
     </AppBar>
   );

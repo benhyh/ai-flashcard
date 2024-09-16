@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Dashboard from "./Dashboard";
+import { ToastContainer } from "react-toastify";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
@@ -13,8 +13,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div>
+    <>
       <Dashboard user={user} isLoaded={isLoaded} />
-    </div>
+    </>
   );
 }

@@ -33,10 +33,7 @@ export default function DeckPage() {
   const [subDeckName, setSubDeckName] = useState([]);
   const [subDeck, setSubDeck] = useState("");
   const [open, setOpen] = useState(false);
-  const { handleHomeClick } = useNavigationUtils();
-
-  const [flashcards, setFlashcards] = useState([]);
-  const [text, setText] = useState("");
+  const { handleHomeClick, handleSubDeckClick } = useNavigationUtils();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -54,8 +51,9 @@ export default function DeckPage() {
 
   const handleDeleteDeck = async (subDeck) => {
     try {
-      const updatedDecks = await deleteSubDeck(subDeck);
-      if (updatedDecks) setSubDeckName(updatedDecks);
+      await deleteSubDeck(deckName, subDeck);
+      const updatedSubDecks = await updateSubDeck(deckName);
+      setSubDeckName(updatedSubDecks);
     } catch (error) {
       console.error("Error deleting decks:", error);
     }
@@ -64,30 +62,6 @@ export default function DeckPage() {
   useEffect(() => {
     fetchSubDecks();
   }, [fetchSubDecks]);
-
-  const createFlashcard = async () => {
-    if (!text.trim()) {
-      alert("Please enter some text to generate flashcards.");
-      return;
-    }
-
-    try {
-      const response = fetch("/api/generate", {
-        method: "POST",
-        body: text,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to generate flashcards.");
-      }
-
-      const data = await new response.json();
-      setFlashcards(data);
-    } catch (error) {
-      console.error("Error generating flashcards:", error);
-      alert("An error occurred while generating flashcards. Please try again.");
-    }
-  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -203,7 +177,14 @@ export default function DeckPage() {
           </Box>
 
           {subDeckName.map((subDeck, index) => (
-            <Paper sx={{ mb: 3 }} key={index}>
+            <Paper
+              sx={{
+                mb: 3,
+                bgcolor: "#4b6a2e",
+                borderRadius: "10px",
+              }}
+              key={index}
+            >
               <Box sx={{ p: 2 }}>
                 <Box
                   sx={{
@@ -237,21 +218,27 @@ export default function DeckPage() {
                       }}
                     >
                       <Button disableRipple>
-                        <Play size={16} color="white" fill="white" />
+                        <Play
+                          size={16}
+                          color="white"
+                          fill="white"
+                          onClick={() =>
+                            handleSubDeckClick(deckName, subDeck.name)
+                          }
+                        />
                       </Button>
                     </Box>
                     <Box>
                       <Typography
                         variant="subtitle1"
-                        fontWeight="bold"
-                        sx={{ fontFamily: "fondamento" }}
+                        fontWeight="semi-bold"
+                        sx={{ fontFamily: "fondamento", color: "white" }}
                       >
                         {subDeck.name}
                       </Typography>
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        fontWeight="bold"
+                        color="white"
                         sx={{ fontFamily: "Fondamento" }}
                       >
                         30 Cards Out Of 80 Were Studied
@@ -259,25 +246,31 @@ export default function DeckPage() {
                     </Box>
                   </Box>
                   <Box>
-                    <IconButton size="small">
+                    <IconButton size="small" sx={{ color: "white" }}>
                       <Plus />
                     </IconButton>
-                    <IconButton size="small">
+                    <IconButton size="small" sx={{ color: "white" }}>
                       <Pencil />
                     </IconButton>
-                    <IconButton size="small">
+                    <IconButton
+                      size="small"
+                      sx={{ color: "white" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteDeck(subDeck.name);
+                      }}
+                    >
                       <Trash />
                     </IconButton>
                   </Box>
                 </Box>
                 <LinearProgress
-                  variant="determinate"
-                  value={37.5}
+                  variant="indeterminate"
                   sx={{
                     height: 8,
                     borderRadius: 4,
                     "& .MuiLinearProgress-bar": {
-                      backgroundColor: "black", // Color of the progress bar
+                      backgroundColor: "white", // Color of the progress bar
                     },
                     backgroundColor: "gray", // Color of the background bar
                   }}

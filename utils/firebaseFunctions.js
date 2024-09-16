@@ -10,6 +10,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { fireStore } from "@/firebase";
+import { toast } from "react-toastify";
 
 export const updateDeck = async () => {
   const snapshot = query(collection(fireStore, "folders"));
@@ -57,7 +58,7 @@ export const addDeck = async (deck, user) => {
     await setDoc(docRef, newFolderData);
     return await updateDeck();
   } else {
-    console.log("Folder already exists.");
+    console.error("Deck already exists!");
     return null;
   }
 };
@@ -70,7 +71,6 @@ export const addSubDeck = async (deckName, subDeckName) => {
     parent: deckName,
     createdAt: Timestamp.now(),
   });
-  return updateSubDeck(deckName);
 };
 
 export const deleteDeck = async (deck) => {
@@ -84,14 +84,19 @@ export const deleteDeck = async (deck) => {
   }
 };
 
-export const deleteSubDeck = async (deck, subDeck) => {
+export const deleteSubDeck = async (deckName, subDeckName) => {
   try {
-    const docRef = doc(
-      collection(doc(fireStore, "folders", deck), deck),
-      subDeck
+    const parentDocRef = doc(fireStore, "folders", deckName);
+    const subDecksCollectionRef = collection(parentDocRef, "subDecks");
+
+    const querySnapshot = await getDocs(subDecksCollectionRef);
+    const subDeckDoc = querySnapshot.docs.find(
+      (doc) => doc.data().name === subDeckName
     );
-    await deleteDoc(docRef);
-    return await updateSubDeck();
+
+    if (subDeckDoc) {
+      await deleteDoc(subDeckDoc.ref);
+    }
   } catch (error) {
     console.error("Error deleting deck:", error);
     throw error;
