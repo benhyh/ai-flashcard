@@ -75,6 +75,7 @@ export const DashboardMain = ({
             onChange={setDeck}
             onSubmit={addDeck}
             value={deck}
+            setValue={setDeck}
           />
         </Modal>
       </Box>

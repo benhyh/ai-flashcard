@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ArrowBack,
   ChevronLeft,
@@ -11,7 +11,6 @@ import {
   Search,
 } from "@mui/icons-material";
 import {
-  AppBar,
   Toolbar,
   IconButton,
   Typography,
@@ -36,6 +35,17 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigationUtils } from "@/utils/navigationUtils";
 import { useParams } from "next/navigation";
 import { Delete, Pencil } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import {
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { fireStore } from "@/firebase";
+import "react-toastify/dist/ReactToastify.css";
+import { updateFlashcards } from "@/utils/firebaseFunctions";
 
 const theme = createTheme({
   palette: {
@@ -56,12 +66,140 @@ export default function FlashcardUI() {
   const { deckName, subDeckName } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const generateNewCard = () => {
-    // This is where you would integrate with OpenAI GPT
-    // For now, we'll just add the prompt as a new card
-    const newCard = { question: newCardPrompt, answer: "Generated answer" };
-    setGeneratedCards([...generatedCards, newCard]);
+  const generateNewCard = async () => {
+    if (newCardPrompt.trim() === "") {
+      toast.error("Please enter a prompt to generate a flashcard.", {
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        style: {
+          fontFamily: "Fondamento",
+          background: "#4b6a2e",
+          color: "white",
+        },
+        progressStyle: {
+          background: "#8fbc8f",
+        },
+      });
+      setNewCardPrompt("");
+      return;
+    }
+
     setNewCardPrompt("");
+
+    try {
+      toast.info("Generating flashcards...", {
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        style: {
+          fontFamily: "Fondamento",
+          background: "#4b6a2e",
+          color: "white",
+        },
+        progressStyle: {
+          background: "#8fbc8f",
+        },
+      });
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: newCardPrompt }),
+      });
+
+      const data = await response.json();
+      const newFlashCards = Array.isArray(data.flashcards)
+        ? data.flashcards
+        : [data.flashcards];
+
+      if (response.ok) {
+        const flashCardsCollectionRef = collection(
+          fireStore,
+          "folders",
+          deckName,
+          "subDecks",
+          subDeckName,
+          "flashcards"
+        );
+
+        for (const card of newFlashCards) {
+          await addDoc(flashCardsCollectionRef, {
+            question: card.front,
+            answer: card.back,
+          });
+        }
+
+        toast.success("Flashcards generated successfully!", {
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          style: {
+            fontFamily: "Fondamento",
+            background: "#4b6a2e",
+            color: "white",
+          },
+          progressStyle: {
+            background: "#8fbc8f",
+          },
+        });
+
+        setGeneratedCards([...generatedCards, newFlashCards]);
+      } else {
+        toast.error("Failed to generate flashcards", {
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          style: {
+            fontFamily: "Fondamento",
+            background: "#4b6a2e",
+            color: "white",
+          },
+          progressStyle: {
+            background: "#8fbc8f",
+          },
+        });
+      }
+    } catch (error) {
+      toast.dismiss();
+
+      console.error("Error generating flashcards:", error);
+      toast.error(`Error: ${error.message}`, {
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        style: {
+          fontFamily: "Fondamento",
+          background: "#4b6a2e",
+          color: "white",
+        },
+        progressStyle: {
+          background: "#8fbc8f",
+        },
+      });
+    }
   };
 
   const handleEditCard = (index) => {
@@ -69,7 +207,23 @@ export default function FlashcardUI() {
     setEditDialogOpen(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
+    if (!editingCard) return;
+
+    const flashcardRef = doc(
+      fireStore,
+      "folders",
+      deckName,
+      "subDecks",
+      subDeckName,
+      "flashcards",
+      editingCard.id
+    );
+    await updateDoc(flashcardRef, {
+      question: editingCard.front,
+      answer: editingCard.back,
+    });
+
     const updatedCards = generatedCards.map((card) =>
       card === editingCard ? { ...editingCard } : card
     );
@@ -77,14 +231,34 @@ export default function FlashcardUI() {
     setEditDialogOpen(false);
   };
 
-  const handleDeleteCard = (index) => {
+  const handleDeleteCard = async (index) => {
+    const flashcardRef = doc(
+      fireStore,
+      "folders",
+      deckName,
+      "subDecks",
+      subDeckName,
+      "flashcards",
+      generatedCards[index].id
+    );
+    await deleteDoc(flashcardRef);
+
     const updatedCards = generatedCards.filter((_, i) => i !== index);
     setGeneratedCards(updatedCards);
   };
 
+  const fetchFlashcards = useCallback(async () => {
+    const flashcards = await updateFlashcards(deckName, subDeckName);
+    if (flashcards) setGeneratedCards(flashcards);
+  }, [deckName, subDeckName]);
+
   const toggleEnlarge = () => {
     setIsEnlarged(!isEnlarged);
   };
+
+  useEffect(() => {
+    fetchFlashcards();
+  }, [fetchFlashcards]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -94,17 +268,6 @@ export default function FlashcardUI() {
             sx={{
               mb: 2,
               position: "relative",
-              ...(isEnlarged && {
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                zIndex: 1000,
-                width: "80%",
-                height: "80%",
-                display: "flex",
-                flexDirection: "column",
-              }),
             }}
           >
             <Box sx={{ bgcolor: "#4b6a2e" }}>
@@ -165,17 +328,47 @@ export default function FlashcardUI() {
                 right: 0,
                 bottom: 0,
                 backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(20px)",
                 zIndex: 999,
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "center",
                 alignItems: "center",
-                padding: "0 20px",
               }}
             >
-              <IconButton size="large" sx={{ color: "white" }}>
+              <IconButton
+                size="large"
+                sx={{ color: "white", position: "absolute", left: 20 }}
+              >
                 <ChevronLeft />
               </IconButton>
-              <IconButton size="large" sx={{ color: "white" }}>
+              <Card
+                sx={{
+                  width: "80%",
+                  height: "80%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                <Typography variant="h5" component="div" align="center">
+                  {question}
+                </Typography>
+                <IconButton
+                  onClick={toggleEnlarge}
+                  sx={{
+                    position: "absolute",
+                    bottom: 8,
+                    right: 8,
+                  }}
+                >
+                  <FullscreenExit />
+                </IconButton>
+              </Card>
+              <IconButton
+                size="large"
+                sx={{ color: "white", position: "absolute", right: 20 }}
+              >
                 <ChevronRight />
               </IconButton>
             </Box>
@@ -185,13 +378,20 @@ export default function FlashcardUI() {
 
           {!isEnlarged && (
             <>
-              <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
+              <Box sx={{ display: "flex", gap: 1, mb: 4 }}>
                 <TextField
                   fullWidth
                   variant="outlined"
                   placeholder="Enter prompt to generate flashcards..."
                   value={newCardPrompt}
                   onChange={(e) => setNewCardPrompt(e.target.value)}
+                  autoComplete="off"
+                  inputProps={{
+                    autoComplete: "off",
+                    form: {
+                      autoComplete: "off",
+                    },
+                  }}
                   sx={{
                     color: "white",
                     "& .MuiOutlinedInput-root": {
@@ -211,6 +411,7 @@ export default function FlashcardUI() {
                     },
                   }}
                 />
+                <ToastContainer />
                 <Button
                   variant="contained"
                   onClick={generateNewCard}
@@ -226,7 +427,6 @@ export default function FlashcardUI() {
                   Generate
                 </Button>
               </Box>
-
               <Paper
                 sx={{
                   p: 3,
@@ -248,6 +448,13 @@ export default function FlashcardUI() {
                   variant="outlined"
                   placeholder="Search flashcards..."
                   value={searchTerm}
+                  autoComplete="off"
+                  inputProps={{
+                    autoComplete: "off",
+                    form: {
+                      autoComplete: "off",
+                    },
+                  }}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   sx={{
                     color: "white",
@@ -277,10 +484,10 @@ export default function FlashcardUI() {
                 />
                 <List>
                   {generatedCards.map((card, index) => (
-                    <ListItem key={index} divider>
+                    <ListItem key={card.id || index} divider>
                       <ListItemText
-                        primary={card.question}
-                        secondary={card.answer}
+                        primary={card.question || card.front}
+                        secondary={card.answer || card.back}
                         sx={{ color: "white" }}
                       />
                       <ListItemSecondaryAction>

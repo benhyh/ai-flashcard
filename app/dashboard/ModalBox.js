@@ -17,13 +17,14 @@ const ModalBox = ({ onSubmit, handleClose, onChange, value }) => {
         theme: "dark",
         style: {
           fontFamily: "Fondamento",
-          background: "radial-gradient(closest-corner, #4b6a2e, #242e21)",
+          background: "#4b6a2e",
           color: "white",
         },
         progressStyle: {
           background: "#8fbc8f",
         },
       });
+      onChange("");
       return;
     }
 
@@ -39,13 +40,14 @@ const ModalBox = ({ onSubmit, handleClose, onChange, value }) => {
         theme: "dark",
         style: {
           fontFamily: "Fondamento",
-          background: "radial-gradient(closest-corner, #4b6a2e, #242e21)",
+          background: "#4b6a2e",
           color: "white",
         },
         progressStyle: {
           background: "#8fbc8f",
         },
       });
+      onChange("");
       return;
     }
 

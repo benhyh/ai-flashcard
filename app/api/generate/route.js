@@ -4,12 +4,13 @@ import OpenAI from "openai";
 // Define the system prompt as a template literal (multi-line string)
 const systemPrompt = `You are a flashcard creator. Your task is to generate flashcards from the provided text. Follow these guidelines:
 
-1. Create exactly 10 flashcards from the given text.
+1. Create exactly the amount of flashcards specified in the prompt.
 2. Each flashcard should have a 'front' and a 'back' side.
 3. Both the front and back of each card should be exactly one sentence long.
 4. The front should typically be a question or prompt, and the back should be the answer or explanation.
 5. Ensure that the flashcards cover key concepts from the input text.
-6. Return the flashcards in the following JSON format:
+6. If the prompt is not relevant, return an empty array.
+7. Return the flashcards in the following JSON format:
 
 {
   "flashcards": [
@@ -17,7 +18,6 @@ const systemPrompt = `You are a flashcard creator. Your task is to generate flas
       "front": "Front of the card",
       "back": "Back of the card"
     },
-    // ... (8 more flashcard objects)
   ]
 }
 
@@ -46,6 +46,12 @@ export async function POST(req) {
   // Parse the JSON response from the API
   const flashcards = JSON.parse(completion.choices[0].message.content);
 
+  // Format
+  const formattedFlashcards = flashcards.flashcards.map((card) => ({
+    front: card.front,
+    back: card.back,
+  }));
+
   // Return the flashcards as a JSON response
-  return NextResponse.json(flashcards.flashcards);
+  return NextResponse.json({ flashcards: formattedFlashcards });
 }

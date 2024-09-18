@@ -102,3 +102,24 @@ export const deleteSubDeck = async (deckName, subDeckName) => {
     throw error;
   }
 };
+
+export const updateFlashcards = async (deckName, subDeckName) => {
+  const flashcardsCollectionRef = collection(
+    fireStore,
+    "folders",
+    deckName,
+    "subDecks",
+    subDeckName,
+    "flashcards"
+  );
+  const snapshot = query(flashcardsCollectionRef);
+  const documents = await getDocs(snapshot);
+  const flashcardsList = [];
+  documents.docs.map((doc) => {
+    flashcardsList.push({
+      id: doc.id,
+      ...doc.data(),
+    });
+  });
+  return flashcardsList;
+};
