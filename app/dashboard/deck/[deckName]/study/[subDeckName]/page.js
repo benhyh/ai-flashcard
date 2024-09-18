@@ -30,6 +30,8 @@ import {
   DialogActions,
   Paper,
   InputAdornment,
+  Stack,
+  styled,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigationUtils } from "@/utils/navigationUtils";
@@ -46,6 +48,21 @@ import {
 import { fireStore } from "@/firebase";
 import "react-toastify/dist/ReactToastify.css";
 import { updateFlashcards } from "@/utils/firebaseFunctions";
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    overflow: hidden;
+  }
+`;
+
+const ScrollableStack = styled(Stack)(({ theme }) => ({
+  "&::-webkit-scrollbar": {
+    display: "none",
+  },
+  "-ms-overflow-style": "none",
+  "scrollbar-width": "none",
+}));
 
 const theme = createTheme({
   palette: {
@@ -158,7 +175,8 @@ export default function FlashcardUI() {
           },
         });
 
-        setGeneratedCards([...generatedCards, newFlashCards]);
+        const updatedFlashcards = await updateFlashcards(deckName, subDeckName);
+        setGeneratedCards(updatedFlashcards);
       } else {
         toast.error("Failed to generate flashcards", {
           autoClose: 5000,
@@ -258,10 +276,11 @@ export default function FlashcardUI() {
 
   useEffect(() => {
     fetchFlashcards();
-  }, [fetchFlashcards]);
+  }, [fetchFlashcards, generatedCards]);
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <Box sx={{ minHeight: "100vh", bgcolor: "background.default", p: 2 }}>
         <Container maxWidth="md">
           <Card
@@ -431,92 +450,125 @@ export default function FlashcardUI() {
                 sx={{
                   p: 3,
                   mb: 2,
-                  maxHeight: "calc(100vh - 300px)",
+                  maxHeight: "calc(85vh - 270px)",
                   overflow: "hidden",
                   backgroundColor: "#4b6a2e",
                   color: "white",
+                  border: "2px solid white",
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{ mb: 2, fontFamily: "Fondamento" }}
-                >
-                  Generated Flashcards
-                </Typography>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  placeholder="Search flashcards..."
-                  value={searchTerm}
-                  autoComplete="off"
-                  inputProps={{
-                    autoComplete: "off",
-                    form: {
-                      autoComplete: "off",
-                    },
-                  }}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                <Toolbar
                   sx={{
-                    color: "white",
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "white",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "white",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "white",
-                      },
-                    },
-                    "& .MuiInputBase-input": {
-                      color: "white",
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    sx={{
                       fontFamily: "Fondamento",
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ color: "white" }}>
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <List>
-                  {generatedCards.map((card, index) => (
-                    <ListItem key={card.id || index} divider>
-                      <ListItemText
-                        primary={card.question || card.front}
-                        secondary={card.answer || card.back}
-                        sx={{ color: "white" }}
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          edge="end"
-                          aria-label="edit"
-                          onClick={() => handleEditCard(index)}
+                      flexGrow: 1,
+                      mr: 2,
+                    }}
+                  >
+                    Generated Flashcards
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    placeholder="Search flashcards..."
+                    value={searchTerm}
+                    autoComplete="off"
+                    inputProps={{
+                      autoComplete: "off",
+                      form: {
+                        autoComplete: "off",
+                      },
+                    }}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{
+                      color: "white",
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "white",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "white",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "white",
+                        },
+                      },
+                      "& .MuiInputBase-input": {
+                        color: "white",
+                        fontFamily: "Fondamento",
+                      },
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment
+                          position="start"
+                          sx={{ color: "white" }}
                         >
-                          <Edit />
-                        </IconButton>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => handleDeleteCard(index)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
-                </List>
+                          <Search />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Toolbar>
+
+                <ScrollableStack
+                  spacing={2}
+                  sx={{
+                    overflowY: "auto",
+                    maxHeight: "calc(100vh - 300px)",
+                    mt: 2,
+                  }}
+                >
+                  <List>
+                    {generatedCards.map((card, index) => (
+                      <ListItem key={card.id || index} divider>
+                        <ListItemText
+                          primary={card.question}
+                          secondary={card.answer}
+                          sx={{ color: "white" }}
+                        />
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            edge="end"
+                            aria-label="edit"
+                            onClick={() => handleEditCard(index)}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            onClick={() => handleDeleteCard(index)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))}
+                  </List>
+                </ScrollableStack>
               </Paper>
 
               <Dialog
                 open={editDialogOpen}
                 onClose={() => setEditDialogOpen(false)}
+                sx={{
+                  "& .MuiDialog-paper": {
+                    backgroundColor: "#4b6a2e",
+                    color: "white",
+                    border: "1px solid white",
+                  },
+                }}
               >
-                <DialogTitle>Edit Flashcard</DialogTitle>
-                <DialogContent>
+                <DialogTitle sx={{ fontFamily: "Fondamento" }}>
+                  Edit Flashcard
+                </DialogTitle>
+                <DialogContent sx={{ color: "white" }}>
                   <TextField
                     autoFocus
                     margin="dense"
@@ -531,6 +583,31 @@ export default function FlashcardUI() {
                         question: e.target.value,
                       })
                     }
+                    autoComplete="off"
+                    sx={{
+                      color: "white",
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "white",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "white",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "white",
+                        },
+                      },
+                      "& .MuiInputBase-input": {
+                        color: "white",
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: "white",
+                        fontFamily: "Fondamento",
+                      },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "white",
+                      },
+                    }}
                   />
                   <TextField
                     margin="dense"
@@ -542,13 +619,62 @@ export default function FlashcardUI() {
                     onChange={(e) =>
                       setEditingCard({ ...editingCard, answer: e.target.value })
                     }
+                    autoComplete="off"
+                    sx={{
+                      color: "white",
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "white",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "white",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "white",
+                        },
+                      },
+                      "& .MuiInputBase-input": {
+                        color: "white",
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: "white",
+                        fontFamily: "Fondamento",
+                      },
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "white",
+                      },
+                    }}
                   />
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={() => setEditDialogOpen(false)}>
+                  <Button
+                    onClick={() => setEditDialogOpen(false)}
+                    sx={{
+                      color: "white",
+                      fontFamily: "Fondamento",
+                      "&:hover": {
+                        color: "#4b6a2e",
+                        fontWeight: "bold",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  >
                     Cancel
                   </Button>
-                  <Button onClick={handleSaveEdit}>Save</Button>
+                  <Button
+                    onClick={handleSaveEdit}
+                    sx={{
+                      color: "white",
+                      fontFamily: "Fondamento",
+                      "&:hover": {
+                        color: "#4b6a2e",
+                        fontWeight: "bold",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  >
+                    Save
+                  </Button>
                 </DialogActions>
               </Dialog>
             </>
