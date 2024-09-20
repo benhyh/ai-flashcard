@@ -10,7 +10,8 @@ const systemPrompt = `You are a flashcard creator. Your task is to generate flas
 4. The front should typically be a question or prompt, and the back should be the answer or explanation.
 5. Ensure that the flashcards cover key concepts from the input text.
 6. If the prompt is not relevant, return an empty array.
-7. Return the flashcards in the following JSON format:
+7. If asked to generate more than 10 flashcards, return an empty array.
+8. Return the flashcards in the following JSON format:
 
 {
   "flashcards": [

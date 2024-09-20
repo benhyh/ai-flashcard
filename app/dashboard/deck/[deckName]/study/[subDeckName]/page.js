@@ -42,12 +42,17 @@ import {
   addDoc,
   collection,
   doc,
+  getDocs,
+  query,
   updateDoc,
-  deleteDoc,
+  where,
 } from "firebase/firestore";
 import { fireStore } from "@/firebase";
 import "react-toastify/dist/ReactToastify.css";
-import { updateFlashcards } from "@/utils/firebaseFunctions";
+import {
+  updateFlashcards,
+  handleDeleteFlashcard,
+} from "@/utils/firebaseFunctions";
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
@@ -82,6 +87,26 @@ export default function FlashcardUI() {
   const { handleBackToDeck } = useNavigationUtils();
   const { deckName, subDeckName } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = useCallback(
+    async (e) => {
+      const newSearchTerm = e.target.value;
+      setSearchTerm(newSearchTerm);
+
+      if (newSearchTerm === "") {
+        const updatedFlashcards = await updateFlashcards(deckName, subDeckName);
+        setGeneratedCards(updatedFlashcards);
+      } else {
+        const filteredCards = generatedCards.filter(
+          (card) =>
+            card.question.toLowerCase().includes(newSearchTerm.toLowerCase()) ||
+            card.answer.toLowerCase().includes(newSearchTerm.toLowerCase())
+        );
+        setGeneratedCards(filteredCards);
+      }
+    },
+    [deckName, subDeckName, generatedCards]
+  );
 
   const generateNewCard = async () => {
     if (newCardPrompt.trim() === "") {
@@ -141,61 +166,56 @@ export default function FlashcardUI() {
         : [data.flashcards];
 
       if (response.ok) {
-        const flashCardsCollectionRef = collection(
+        const subDecksCollectionRef = collection(
           fireStore,
           "folders",
           deckName,
-          "subDecks",
-          subDeckName,
-          "flashcards"
+          "subDecks"
+        );
+        const subDeckQuery = query(
+          subDecksCollectionRef,
+          where("name", "==", subDeckName)
         );
 
-        for (const card of newFlashCards) {
-          await addDoc(flashCardsCollectionRef, {
-            question: card.front,
-            answer: card.back,
-          });
+        const subDeckSnapshot = await getDocs(subDeckQuery);
+
+        if (!subDeckSnapshot.empty) {
+          const subDeckDoc = subDeckSnapshot.docs[0];
+          const flashcardsCollectionRef = collection(
+            subDeckDoc.ref,
+            "flashcards"
+          );
+          for (const card of newFlashCards) {
+            await addDoc(flashcardsCollectionRef, {
+              question: card.front,
+              answer: card.back,
+            });
+          }
+        } else {
+          toast.error("Error: Sub-deck was not found.");
         }
-
-        toast.success("Flashcards generated successfully!", {
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          style: {
-            fontFamily: "Fondamento",
-            background: "#4b6a2e",
-            color: "white",
-          },
-          progressStyle: {
-            background: "#8fbc8f",
-          },
-        });
-
-        const updatedFlashcards = await updateFlashcards(deckName, subDeckName);
-        setGeneratedCards(updatedFlashcards);
-      } else {
-        toast.error("Failed to generate flashcards", {
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          style: {
-            fontFamily: "Fondamento",
-            background: "#4b6a2e",
-            color: "white",
-          },
-          progressStyle: {
-            background: "#8fbc8f",
-          },
-        });
       }
+
+      toast.success("Flashcards generated successfully!", {
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        style: {
+          fontFamily: "Fondamento",
+          background: "#4b6a2e",
+          color: "white",
+        },
+        progressStyle: {
+          background: "#8fbc8f",
+        },
+      });
+
+      const generatedCards = await updateFlashcards(deckName, subDeckName);
+      setGeneratedCards(generatedCards);
     } catch (error) {
       toast.dismiss();
 
@@ -250,19 +270,13 @@ export default function FlashcardUI() {
   };
 
   const handleDeleteCard = async (index) => {
-    const flashcardRef = doc(
-      fireStore,
-      "folders",
+    handleDeleteFlashcard(
       deckName,
-      "subDecks",
       subDeckName,
-      "flashcards",
-      generatedCards[index].id
+      index,
+      generatedCards,
+      setGeneratedCards
     );
-    await deleteDoc(flashcardRef);
-
-    const updatedCards = generatedCards.filter((_, i) => i !== index);
-    setGeneratedCards(updatedCards);
   };
 
   const fetchFlashcards = useCallback(async () => {
@@ -276,7 +290,7 @@ export default function FlashcardUI() {
 
   useEffect(() => {
     fetchFlashcards();
-  }, [fetchFlashcards, generatedCards]);
+  }, [fetchFlashcards]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -405,6 +419,11 @@ export default function FlashcardUI() {
                   value={newCardPrompt}
                   onChange={(e) => setNewCardPrompt(e.target.value)}
                   autoComplete="off"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      generateNewCard();
+                    }
+                  }}
                   inputProps={{
                     autoComplete: "off",
                     form: {
@@ -484,7 +503,7 @@ export default function FlashcardUI() {
                         autoComplete: "off",
                       },
                     }}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={handleSearch}
                     sx={{
                       color: "white",
                       "& .MuiOutlinedInput-root": {

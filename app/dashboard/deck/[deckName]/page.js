@@ -27,8 +27,10 @@ import {
   addSubDeck,
   deleteSubDeck,
 } from "@/utils/firebaseFunctions";
+import { useUser } from "@clerk/nextjs";
 
 export default function DeckPage() {
+  const { user } = useUser();
   const { deckName } = useParams();
   const [subDeckName, setSubDeckName] = useState([]);
   const [subDeck, setSubDeck] = useState("");
@@ -44,7 +46,7 @@ export default function DeckPage() {
   }, [deckName]);
 
   const handleAddSubDeck = async (subDeck) => {
-    const updatedDecks = await addSubDeck(deckName, subDeck);
+    const updatedDecks = await addSubDeck(deckName, subDeck, user);
     fetchSubDecks();
     if (updatedDecks) setSubDeckName(updatedDecks);
   };

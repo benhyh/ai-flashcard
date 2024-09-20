@@ -10,7 +10,6 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { fireStore } from "@/firebase";
-import { toast } from "react-toastify";
 
 export const updateDeck = async () => {
   const snapshot = query(collection(fireStore, "folders"));
@@ -63,11 +62,13 @@ export const addDeck = async (deck, user) => {
   }
 };
 
-export const addSubDeck = async (deckName, subDeckName) => {
+export const addSubDeck = async (deckName, subDeckName, user) => {
   const deckDocRef = doc(fireStore, "folders", deckName);
   const subDecksCollectionRef = collection(deckDocRef, "subDecks");
   await addDoc(subDecksCollectionRef, {
     name: subDeckName,
+    createdBy: user.fullName,
+    userID: user.id,
     parent: deckName,
     createdAt: Timestamp.now(),
   });
@@ -122,4 +123,26 @@ export const updateFlashcards = async (deckName, subDeckName) => {
     });
   });
   return flashcardsList;
+};
+
+export const handleDeleteFlashcard = async (
+  deckName,
+  subDeckName,
+  index,
+  generatedCards,
+  setGeneratedCards
+) => {
+  const flashcardRef = doc(
+    fireStore,
+    "folders",
+    deckName,
+    "subDecks",
+    subDeckName,
+    "flashcards",
+    generatedCards[index].id
+  );
+  await deleteDoc(flashcardRef);
+
+  const updatedCards = generatedCards.filter((_, i) => i !== index);
+  setGeneratedCards(updatedCards);
 };

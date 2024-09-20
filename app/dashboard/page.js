@@ -2,7 +2,6 @@
 
 import { useUser } from "@clerk/nextjs";
 import Dashboard from "./Dashboard";
-import { ToastContainer } from "react-toastify";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
