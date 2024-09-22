@@ -8,6 +8,8 @@ import {
   query,
   setDoc,
   Timestamp,
+  where,
+  updateDoc,
 } from "firebase/firestore";
 import { fireStore } from "@/firebase";
 
@@ -105,16 +107,12 @@ export const deleteSubDeck = async (deckName, subDeckName) => {
 };
 
 export const updateFlashcards = async (deckName, subDeckName) => {
-  const flashcardsCollectionRef = collection(
-    fireStore,
-    "folders",
-    deckName,
-    "subDecks",
-    subDeckName,
-    "flashcards"
-  );
-  const snapshot = query(flashcardsCollectionRef);
-  const documents = await getDocs(snapshot);
+  const subDeckRef = collection(fireStore, "folders", deckName, "subDecks");
+  const subDeckQuery = query(subDeckRef, where("name", "==", subDeckName));
+  const subDeckSnapshot = await getDocs(subDeckQuery);
+  const subDeckDoc = subDeckSnapshot.docs[0];
+  const flashcardsCollectionRef = collection(subDeckDoc.ref, "flashcards");
+  const documents = await getDocs(flashcardsCollectionRef);
   const flashcardsList = [];
   documents.docs.map((doc) => {
     flashcardsList.push({
@@ -132,17 +130,33 @@ export const handleDeleteFlashcard = async (
   generatedCards,
   setGeneratedCards
 ) => {
-  const flashcardRef = doc(
-    fireStore,
-    "folders",
-    deckName,
-    "subDecks",
-    subDeckName,
-    "flashcards",
-    generatedCards[index].id
-  );
-  await deleteDoc(flashcardRef);
+  const subDeckRef = collection(fireStore, "folders", deckName, "subDecks");
+  const subDeckQuery = query(subDeckRef, where("name", "==", subDeckName));
+  const subDeckSnapshot = await getDocs(subDeckQuery);
+  const subDeckDoc = subDeckSnapshot.docs[0];
+  const flashcardsCollectionRef = collection(subDeckDoc.ref, "flashcards");
+  const flashCardRef = doc(flashcardsCollectionRef, generatedCards[index].id);
+
+  await deleteDoc(flashCardRef);
 
   const updatedCards = generatedCards.filter((_, i) => i !== index);
   setGeneratedCards(updatedCards);
+};
+
+export const handleEditFlashcard = async (
+  deckName,
+  subDeckName,
+  editingCard
+) => {
+  const subDeckRef = collection(fireStore, "folders", deckName, "subDecks");
+  const subDeckQuery = query(subDeckRef, where("name", "==", subDeckName));
+  const subDeckSnapshot = await getDocs(subDeckQuery);
+  const subDeckDoc = subDeckSnapshot.docs[0];
+  const flashcardsCollectionRef = collection(subDeckDoc.ref, "flashcards");
+  const flashCardRef = doc(flashcardsCollectionRef, editingCard.id);
+
+  await updateDoc(flashCardRef, {
+    answer: editingCard.answer,
+    question: editingCard.question,
+  });
 };

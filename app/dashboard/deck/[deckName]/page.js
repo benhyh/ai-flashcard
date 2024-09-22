@@ -232,25 +232,15 @@ export default function DeckPage() {
                     </Box>
                     <Box>
                       <Typography
-                        variant="subtitle1"
+                        variant="h5"
                         fontWeight="semi-bold"
                         sx={{ fontFamily: "fondamento", color: "white" }}
                       >
                         {subDeck.name}
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        color="white"
-                        sx={{ fontFamily: "Fondamento" }}
-                      >
-                        30 Cards Out Of 80 Were Studied
-                      </Typography>
                     </Box>
                   </Box>
                   <Box>
-                    <IconButton size="small" sx={{ color: "white" }}>
-                      <Plus />
-                    </IconButton>
                     <IconButton size="small" sx={{ color: "white" }}>
                       <Pencil />
                     </IconButton>

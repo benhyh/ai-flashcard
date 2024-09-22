@@ -38,20 +38,13 @@ import { useNavigationUtils } from "@/utils/navigationUtils";
 import { useParams } from "next/navigation";
 import { Delete, Pencil } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { fireStore } from "@/firebase";
 import "react-toastify/dist/ReactToastify.css";
 import {
   updateFlashcards,
   handleDeleteFlashcard,
+  handleEditFlashcard,
 } from "@/utils/firebaseFunctions";
 import { createGlobalStyle } from "styled-components";
 
@@ -245,31 +238,14 @@ export default function FlashcardUI() {
     setEditDialogOpen(true);
   };
 
-  const handleSaveEdit = async () => {
-    if (!editingCard) return;
-
-    const flashcardRef = doc(
-      fireStore,
-      "folders",
-      deckName,
-      "subDecks",
-      subDeckName,
-      "flashcards",
-      editingCard.id
-    );
-    await updateDoc(flashcardRef, {
-      question: editingCard.front,
-      answer: editingCard.back,
-    });
-
-    const updatedCards = generatedCards.map((card) =>
-      card === editingCard ? { ...editingCard } : card
-    );
-    setGeneratedCards(updatedCards);
+  const handleSaveCard = async () => {
+    handleEditFlashcard(deckName, subDeckName, editingCard);
     setEditDialogOpen(false);
+    const editedFlashcards = await updateFlashcards(deckName, subDeckName);
+    setGeneratedCards(editedFlashcards);
   };
 
-  const handleDeleteCard = async (index) => {
+  const handleDeleteCard = (index) => {
     handleDeleteFlashcard(
       deckName,
       subDeckName,
@@ -681,7 +657,7 @@ export default function FlashcardUI() {
                     Cancel
                   </Button>
                   <Button
-                    onClick={handleSaveEdit}
+                    onClick={handleSaveCard}
                     sx={{
                       color: "white",
                       fontFamily: "Fondamento",
