@@ -145,11 +145,14 @@ export const handleDeleteFlashcard = async (
 
 export const handleEditFlashcard = async (
   deckName,
-  subDeckName,
+  initialSubDeckName,
   editingCard
 ) => {
   const subDeckRef = collection(fireStore, "folders", deckName, "subDecks");
-  const subDeckQuery = query(subDeckRef, where("name", "==", subDeckName));
+  const subDeckQuery = query(
+    subDeckRef,
+    where("name", "==", initialSubDeckName)
+  );
   const subDeckSnapshot = await getDocs(subDeckQuery);
   const subDeckDoc = subDeckSnapshot.docs[0];
   const flashcardsCollectionRef = collection(subDeckDoc.ref, "flashcards");
@@ -160,3 +163,28 @@ export const handleEditFlashcard = async (
     question: editingCard.question,
   });
 };
+
+export const handleChangeFlashcardName = async (
+  deckName,
+  subDeckName,
+  editedName
+) => {
+  const subDeckRef = collection(fireStore, "folders", deckName, "subDecks");
+  const subDeckQuery = query(subDeckRef, where("name", "==", subDeckName));
+  const subDeckSnapshot = await getDocs(subDeckQuery);
+  const subDeckDoc = subDeckSnapshot.docs[0].ref;
+
+  await updateDoc(subDeckDoc, {
+    name: editedName,
+  });
+};
+
+export const handleChangeDeckName = async (deck, editedName) => {
+  const docRef = doc(collection(fireStore, "folders"), deck);
+
+  await setDoc(docRef, {
+    name: editedName,
+  });
+};
+
+export const handleChangeSubDeckName = async () => {};

@@ -14,7 +14,7 @@ import {
   Star as StarIcon,
 } from "@mui/icons-material";
 
-export const DashboardSide = ({ handleHomeClick }) => {
+export const DashboardSide = ({ handleHomeClick, favorites }) => {
   return (
     <Box
       sx={{
@@ -67,7 +67,7 @@ export const DashboardSide = ({ handleHomeClick }) => {
         Favorites
       </Typography>
       <List>
-        {["General", "Java", "Codes"].map((text, index) => (
+        {favorites.map((text) => (
           <ListItemButton key={text}>
             <ListItemIcon>
               <StarIcon sx={{ color: "white" }} />

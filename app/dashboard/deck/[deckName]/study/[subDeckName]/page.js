@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   ArrowBack,
+  Check,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -45,6 +46,7 @@ import {
   updateFlashcards,
   handleDeleteFlashcard,
   handleEditFlashcard,
+  handleChangeFlashcardName,
 } from "@/utils/firebaseFunctions";
 import { createGlobalStyle } from "styled-components";
 
@@ -71,7 +73,9 @@ const theme = createTheme({
 });
 
 export default function FlashcardUI() {
-  const [question, setQuestion] = useState("Start generating some flashcards!");
+  const [question, setQuestion] = useState("");
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
   const [newCardPrompt, setNewCardPrompt] = useState("");
   const [generatedCards, setGeneratedCards] = useState([]);
   const [editingCard, setEditingCard] = useState(null);
@@ -80,6 +84,8 @@ export default function FlashcardUI() {
   const { handleBackToDeck } = useNavigationUtils();
   const { deckName, subDeckName } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
+  const [editedName, setEditedName] = useState();
+  const [isEditingName, setIsEditingName] = useState(false);
 
   const handleSearch = useCallback(
     async (e) => {
@@ -255,13 +261,52 @@ export default function FlashcardUI() {
     );
   };
 
+  const handlePrevCard = (e) => {
+    e.stopPropagation();
+    setCurrentCardIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : generatedCards.length - 1
+    );
+    setIsFlipped(false);
+  };
+
+  const handleNextCard = (e) => {
+    e.stopPropagation();
+    setCurrentCardIndex((prevIndex) =>
+      prevIndex < generatedCards.length - 1 ? prevIndex + 1 : 0
+    );
+    setIsFlipped(false);
+  };
+
+  const handleEditName = async () => {
+    setIsEditingName(true);
+    setEditedName(subDeckName);
+  };
+
+  const handleSaveName = async () => {
+    if (editedName.trim() !== "" && editedName !== subDeckName) {
+      await handleChangeFlashcardName(deckName, subDeckName, editedName);
+
+      const updatedFlashcards = await updateFlashcards(deckName, editedName);
+      setGeneratedCards(updatedFlashcards);
+    }
+    setIsEditingName(false);
+  };
+
   const fetchFlashcards = useCallback(async () => {
     const flashcards = await updateFlashcards(deckName, subDeckName);
-    if (flashcards) setGeneratedCards(flashcards);
-  }, [deckName, subDeckName]);
+    if (flashcards) {
+      setGeneratedCards(flashcards);
+      if (flashcards.length > 0) {
+        setQuestion(flashcards[currentCardIndex].question);
+      } else {
+        setQuestion("Start generating some flashcards!");
+      }
+    }
+  }, [deckName, subDeckName, currentCardIndex]);
 
   const toggleEnlarge = () => {
     setIsEnlarged(!isEnlarged);
+    setIsFlipped(false);
   };
 
   useEffect(() => {
@@ -290,24 +335,59 @@ export default function FlashcardUI() {
                 >
                   <ArrowBack />
                 </IconButton>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    flexGrow: 1,
-                    textAlign: "center",
-                    color: "white",
-                    fontFamily: "Fondamento",
-                  }}
-                >
-                  {subDeckName}
-                </Typography>
+                {isEditingName ? (
+                  <TextField
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    onBlur={handleSaveName}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSaveName();
+                      }
+                    }}
+                    autoFocus
+                    autoComplete="off"
+                    sx={{
+                      flexGrow: 1,
+                      input: {
+                        color: "white",
+                        fontFamily: "Fondamento",
+                        textAlign: "center",
+                        fontSize: "1.25rem",
+                      },
+                      "& .MuiInput-underline:before": {
+                        borderBottomColor: "white",
+                      },
+                      "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+                        borderBottomColor: "white",
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottomColor: "white",
+                      },
+                    }}
+                    variant="standard"
+                  />
+                ) : (
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      flexGrow: 1,
+                      textAlign: "center",
+                      color: "white",
+                      fontFamily: "Fondamento",
+                    }}
+                  >
+                    {subDeckName}
+                  </Typography>
+                )}
                 <IconButton
                   edge="end"
                   color="inherit"
                   aria-label="settings"
                   sx={{ color: "white" }}
+                  onClick={isEditingName ? handleSaveName : handleEditName}
                 >
-                  <Pencil />
+                  {isEditingName ? <Check /> : <Pencil />}
                 </IconButton>
               </Toolbar>
             </Box>
@@ -317,7 +397,9 @@ export default function FlashcardUI() {
               </Typography>
             </CardContent>
             <IconButton
-              onClick={toggleEnlarge}
+              onClick={() => {
+                toggleEnlarge();
+              }}
               sx={{
                 position: "absolute",
                 bottom: 8,
@@ -342,11 +424,13 @@ export default function FlashcardUI() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                userSelect: "none",
               }}
             >
               <IconButton
                 size="large"
                 sx={{ color: "white", position: "absolute", left: 20 }}
+                onClick={handlePrevCard}
               >
                 <ChevronLeft />
               </IconButton>
@@ -358,17 +442,27 @@ export default function FlashcardUI() {
                   justifyContent: "center",
                   alignItems: "center",
                   position: "relative",
+                  cursor: "pointer",
                 }}
+                onClick={() => setIsFlipped(!isFlipped)}
               >
                 <Typography variant="h5" component="div" align="center">
-                  {question}
+                  {isFlipped
+                    ? generatedCards[currentCardIndex]?.answer
+                    : generatedCards[currentCardIndex]?.question}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ position: "absolute", left: 32, bottom: 32 }}
+                >
+                  {currentCardIndex + 1} / {generatedCards.length}
                 </Typography>
                 <IconButton
                   onClick={toggleEnlarge}
                   sx={{
                     position: "absolute",
-                    bottom: 8,
-                    right: 8,
+                    bottom: 16,
+                    right: 16,
                   }}
                 >
                   <FullscreenExit />
@@ -377,6 +471,7 @@ export default function FlashcardUI() {
               <IconButton
                 size="large"
                 sx={{ color: "white", position: "absolute", right: 20 }}
+                onClick={handleNextCard}
               >
                 <ChevronRight />
               </IconButton>

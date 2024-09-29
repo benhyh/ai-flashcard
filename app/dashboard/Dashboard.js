@@ -12,9 +12,9 @@ import { useNavigationUtils } from "@/utils/navigationUtils";
 const Dashboard = ({ user }) => {
   const [deckName, setDeckName] = useState([]);
   const [deck, setDeck] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState(false);
   const { handleDeckClick } = useNavigationUtils();
+  const [favorites] = useState([]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -37,17 +37,6 @@ const Dashboard = ({ user }) => {
       console.error("Error deleting deck:", error);
     }
   };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const filteredItems = deckName.filter((item) =>
-    item.name
-      .toLowerCase()
-      .split(" ")
-      .some((word) => word.startsWith(searchQuery.toLowerCase()))
-  );
 
   useEffect(() => {
     fetchDecks();
@@ -83,7 +72,7 @@ const Dashboard = ({ user }) => {
         }}
       >
         <Toolbar />
-        <DashboardSide />
+        <DashboardSide favorites={favorites} />
         <DashboardExit />
       </Drawer>
       <DashboardMain

@@ -92,7 +92,7 @@ const ModalBox = ({ onSubmit, handleClose, onChange, value }) => {
             value={value}
             placeholder="Enter name..."
             onChange={(e) => onChange(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {

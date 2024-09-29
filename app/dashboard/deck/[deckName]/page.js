@@ -13,8 +13,9 @@ import {
   LinearProgress,
   IconButton,
   Modal,
+  TextField,
 } from "@mui/material";
-import { Star, Plus, Pencil, Trash, Play } from "lucide-react";
+import { Star, Pencil, Trash, Play } from "lucide-react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AddIcon from "@mui/icons-material/Add";
 import { DashboardBar } from "../../DashboardBar";
@@ -35,10 +36,22 @@ export default function DeckPage() {
   const [subDeckName, setSubDeckName] = useState([]);
   const [subDeck, setSubDeck] = useState("");
   const [open, setOpen] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [favorites, setFavorites] = useState([]);
   const { handleHomeClick, handleSubDeckClick } = useNavigationUtils();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleFavoriteClick = async () => {
+    if (!favorite) {
+      setFavorite(true);
+      setFavorites((prev) => [...prev, deckName]);
+    } else {
+      setFavorite(false);
+      setFavorites((prev) => prev.filter((deck) => deck !== deckName));
+    }
+  };
 
   const fetchSubDecks = useCallback(async () => {
     const subDeckList = await updateSubDeck(deckName);
@@ -89,7 +102,10 @@ export default function DeckPage() {
         }}
       >
         <Toolbar />
-        <DashboardSide handleHomeClick={handleHomeClick} />
+        <DashboardSide
+          handleHomeClick={handleHomeClick}
+          favorites={favorites}
+        />
         <DashboardExit />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 4, mt: 8, overflow: "auto" }}>
@@ -104,29 +120,24 @@ export default function DeckPage() {
               color: "white",
             }}
           >
-            <Box>
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
               <Typography
-                variant="h4"
+                variant="h3"
                 mb={0.5}
                 sx={{ fontFamily: "Fondamento" }}
               >
                 {deckName}
               </Typography>
-              <Typography
-                variant="body2"
-                sx={{ fontFamily: "Fondamento", opacity: "0.8" }}
-                color="white"
-              >
-                Time Spent: 10 minutes
-              </Typography>
-            </Box>
-            <Box sx={{ display: "flex", mt: { xs: 2, sm: 0 } }}>
-              <IconButton>
-                <Star color="white" />
-              </IconButton>
-              <IconButton>
-                <Pencil color="white" />
-              </IconButton>
+
+              <Box sx={{ mt: 1.2, ml: 2 }}>
+                <IconButton onClick={handleFavoriteClick}>
+                  {!favorite ? (
+                    <Star color="white" />
+                  ) : (
+                    <Star fill="yellow" color="yellow" />
+                  )}
+                </IconButton>
+              </Box>
             </Box>
           </Box>
 
