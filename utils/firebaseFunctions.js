@@ -54,6 +54,7 @@ export const addDeck = async (deck, user) => {
       name: deck,
       parent: "folders",
       path: [],
+      favorites: {},
     };
 
     await setDoc(docRef, newFolderData);
@@ -188,3 +189,21 @@ export const handleChangeDeckName = async (deck, editedName) => {
 };
 
 export const handleChangeSubDeckName = async () => {};
+
+export const toggleFavorite = async (deckName, userId, isFavorite) => {
+  const deckRef = doc(fireStore, "folders", deckName);
+  await updateDoc(deckRef, {
+    [`favorites.${userId}`]: isFavorite,
+  });
+};
+
+export const getFavorites = async (userId) => {
+  const snapshot = await getDocs(collection(fireStore, "folders"));
+  const favorites = [];
+  snapshot.forEach((doc) => {
+    if (doc.data().favorites && doc.data().favorites[userId] === true) {
+      favorites.push(doc.id);
+    }
+  });
+  return favorites;
+};

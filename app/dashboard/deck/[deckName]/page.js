@@ -13,11 +13,8 @@ import {
   LinearProgress,
   IconButton,
   Modal,
-  TextField,
 } from "@mui/material";
 import { Star, Pencil, Trash, Play } from "lucide-react";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import AddIcon from "@mui/icons-material/Add";
 import { DashboardBar } from "../../DashboardBar";
 import { DashboardSide } from "../../DashboardSide";
 import { DashboardExit } from "../../DashboardExit";
@@ -27,8 +24,11 @@ import {
   updateSubDeck,
   addSubDeck,
   deleteSubDeck,
+  getFavorites,
+  toggleFavorite,
 } from "@/utils/firebaseFunctions";
 import { useUser } from "@clerk/nextjs";
+import { Add } from "@mui/icons-material";
 
 export default function DeckPage() {
   const { user } = useUser();
@@ -36,20 +36,23 @@ export default function DeckPage() {
   const [subDeckName, setSubDeckName] = useState([]);
   const [subDeck, setSubDeck] = useState("");
   const [open, setOpen] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-  const [favorites, setFavorites] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favorite, setFavorite] = useState();
   const { handleHomeClick, handleSubDeckClick } = useNavigationUtils();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleFavoriteClick = async () => {
-    if (!favorite) {
-      setFavorite(true);
-      setFavorites((prev) => [...prev, deckName]);
-    } else {
-      setFavorite(false);
-      setFavorites((prev) => prev.filter((deck) => deck !== deckName));
+    const newFavoriteStatus = !isFavorite;
+    setIsFavorite(newFavoriteStatus);
+    setFavorite(newFavoriteStatus);
+    try {
+      await toggleFavorite(deckName, user.id, newFavoriteStatus);
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      setIsFavorite(!newFavoriteStatus);
+      setFavorite(!newFavoriteStatus);
     }
   };
 
@@ -73,6 +76,16 @@ export default function DeckPage() {
       console.error("Error deleting decks:", error);
     }
   };
+
+  useEffect(() => {
+    const checkFavorite = async () => {
+      if (user) {
+        const favorites = await getFavorites(user.id);
+        setIsFavorite(favorites.includes(deckName));
+      }
+    };
+    checkFavorite();
+  }, [user, deckName]);
 
   useEffect(() => {
     fetchSubDecks();
@@ -102,10 +115,7 @@ export default function DeckPage() {
         }}
       >
         <Toolbar />
-        <DashboardSide
-          handleHomeClick={handleHomeClick}
-          favorites={favorites}
-        />
+        <DashboardSide handleHomeClick={handleHomeClick} />
         <DashboardExit />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 4, mt: 8, overflow: "auto" }}>
@@ -131,64 +141,42 @@ export default function DeckPage() {
 
               <Box sx={{ mt: 1.2, ml: 2 }}>
                 <IconButton onClick={handleFavoriteClick}>
-                  {!favorite ? (
+                  {!isFavorite ? (
                     <Star color="white" />
                   ) : (
                     <Star fill="yellow" color="yellow" />
                   )}
                 </IconButton>
+                <IconButton
+                  variant="outlined"
+                  sx={{
+                    color: "white",
+                    borderColor: "black",
+                    color: "white",
+                    borderColor: "white",
+                    fontFamily: "Fondamento",
+                    "&:hover": {
+                      borderColor: "#8FBC8F",
+                      color: "#8FBC8F",
+                    },
+                  }}
+                  onClick={() => {
+                    handleOpen();
+                  }}
+                >
+                  <Add />
+                </IconButton>
+                <Modal open={open} onClose={handleClose}>
+                  <ModalBox
+                    handleClose={handleClose}
+                    value={subDeck}
+                    onSubmit={handleAddSubDeck}
+                    onChange={setSubDeck}
+                  />
+                </Modal>
               </Box>
             </Box>
           </Box>
-
-          <Box sx={{ display: "flex", flexWrap: "wrap", mb: 3 }}>
-            <Button
-              variant="contained"
-              startIcon={<PlayArrowIcon />}
-              sx={{
-                padding: 1.5,
-                color: "white",
-                backgroundColor: "#4b6a2e",
-                fontFamily: "Fondamento",
-                "&:hover": {
-                  backgroundColor: "#374c28",
-                },
-              }}
-            >
-              Play
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              sx={{
-                padding: 1.5,
-                ml: 2,
-                color: "white",
-                borderColor: "black",
-                color: "white",
-                borderColor: "white",
-                fontFamily: "Fondamento",
-                "&:hover": {
-                  borderColor: "#8FBC8F",
-                  color: "#8FBC8F",
-                },
-              }}
-              onClick={() => {
-                handleOpen();
-              }}
-            >
-              New Deck
-            </Button>
-            <Modal open={open} onClose={handleClose}>
-              <ModalBox
-                handleClose={handleClose}
-                value={subDeck}
-                onSubmit={handleAddSubDeck}
-                onChange={setSubDeck}
-              />
-            </Modal>
-          </Box>
-
           {subDeckName.map((subDeck, index) => (
             <Paper
               sx={{

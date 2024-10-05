@@ -72,7 +72,7 @@ const theme = createTheme({
   },
 });
 
-export default function FlashcardUI() {
+export default function FlashcardUI({}) {
   const [question, setQuestion] = useState("");
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);

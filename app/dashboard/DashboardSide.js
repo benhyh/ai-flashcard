@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import {
   Typography,
   List,
@@ -13,8 +14,26 @@ import {
   Folder as FolderIcon,
   Star as StarIcon,
 } from "@mui/icons-material";
+import { useUser } from "@clerk/nextjs";
+import { getFavorites } from "@/utils/firebaseFunctions";
+import { useState, useEffect } from "react";
+import { useNavigationUtils } from "@/utils/navigationUtils";
 
-export const DashboardSide = ({ handleHomeClick, favorites }) => {
+export const DashboardSide = () => {
+  const { user } = useUser();
+  const [favorites, setFavorites] = useState([]);
+  const { handleHomeClick, handleDeckClick } = useNavigationUtils();
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (user) {
+        const userFavorites = await getFavorites(user.id);
+        setFavorites(userFavorites);
+      }
+    };
+    fetchFavorites();
+  }, [user]);
+
   return (
     <Box
       sx={{
@@ -67,22 +86,39 @@ export const DashboardSide = ({ handleHomeClick, favorites }) => {
         Favorites
       </Typography>
       <List>
-        {favorites.map((text) => (
-          <ListItemButton key={text}>
-            <ListItemIcon>
-              <StarIcon sx={{ color: "white" }} />
-            </ListItemIcon>
-            <ListItemText
-              primary={text}
-              sx={{
-                "& .MuiListItemText-primary": {
-                  fontFamily: "Fondamento",
-                  color: "white",
-                },
-              }}
-            />
-          </ListItemButton>
-        ))}
+        {favorites.length === 0 ? (
+          <Typography
+            sx={{
+              px: 2,
+              mt: 1,
+              ml: 0.5,
+              fontFamily: "Fondamento",
+              color: "white",
+            }}
+          >
+            No favorites yet.
+          </Typography>
+        ) : (
+          favorites.map((deckName) => (
+            <ListItemButton
+              key={deckName}
+              onClick={() => handleDeckClick(deckName)}
+            >
+              <ListItemIcon>
+                <StarIcon sx={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={deckName}
+                sx={{
+                  "& .MuiListItemText-primary": {
+                    fontFamily: "Fondamento",
+                    color: "white",
+                  },
+                }}
+              />
+            </ListItemButton>
+          ))
+        )}
       </List>
     </Box>
   );

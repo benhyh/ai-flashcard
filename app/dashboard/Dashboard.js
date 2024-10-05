@@ -14,7 +14,6 @@ const Dashboard = ({ user }) => {
   const [deck, setDeck] = useState("");
   const [open, setOpen] = useState(false);
   const { handleDeckClick } = useNavigationUtils();
-  const [favorites] = useState([]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -72,7 +71,7 @@ const Dashboard = ({ user }) => {
         }}
       >
         <Toolbar />
-        <DashboardSide favorites={favorites} />
+        <DashboardSide />
         <DashboardExit />
       </Drawer>
       <DashboardMain

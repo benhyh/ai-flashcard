@@ -2,7 +2,6 @@
 
 import { useUser } from "@clerk/nextjs";
 import Dashboard from "./Dashboard";
-import { FavoritesProvider } from "../context/FavoritesContext";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
@@ -13,8 +12,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <FavoritesProvider>
+    <>
       <Dashboard user={user} isLoaded={isLoaded} />;
-    </FavoritesProvider>
+    </>
   );
 }

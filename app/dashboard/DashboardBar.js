@@ -1,23 +1,6 @@
-import {
-  AppBar,
-  Button,
-  Typography,
-  Toolbar,
-  Box,
-  InputBase,
-  Modal,
-} from "@mui/material";
-import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material";
-import ModalBox from "./ModalBox";
+import { AppBar, Typography, Toolbar, Box } from "@mui/material";
 
-export const DashboardBar = ({
-  open,
-  handleClose,
-  setDeck,
-  addDeck,
-  handleOpen,
-  folder,
-}) => {
+export const DashboardBar = () => {
   return (
     <AppBar position="sticky" sx={{ bgcolor: "black" }}>
       <Toolbar>
