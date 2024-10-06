@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import { Demo } from "./components/Demo";
 import { Features } from "./components/Features";
 import { Hero } from "./components/Hero";
 import { Pricing } from "./components/Pricing";
@@ -20,7 +19,6 @@ export default function Home() {
     <>
       <Hero />
       <Features />
-      <Demo />
       <Pricing />
     </>
   );

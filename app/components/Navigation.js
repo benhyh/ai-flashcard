@@ -40,18 +40,6 @@ export const Navigation = () => {
                 color: green[800],
               },
             }}
-            href="#demo"
-          >
-            Demo
-          </Button>
-          <Button
-            color="inherit"
-            sx={{
-              fontFamily: "Fondamento",
-              "&:hover": {
-                color: green[800],
-              },
-            }}
             href="#pricing"
           >
             Pricing
