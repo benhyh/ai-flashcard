@@ -29,7 +29,7 @@ export const DashboardMain = ({
     <Box component="main" sx={{ flexGrow: 1, p: 3, color: "white" }}>
       <Toolbar />
       <Typography variant="h3" sx={{ mb: 2, fontFamily: "Fondamento" }}>
-        Hi, {user.firstName}
+        Hi, {user.firstName || "Guest"}
       </Typography>
       <Box sx={{ mb: 2 }}>
         <Button

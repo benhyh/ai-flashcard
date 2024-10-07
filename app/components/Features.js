@@ -75,7 +75,6 @@ export const Features = () => {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "rgba(255, 255, 255, 0.1)",
-              color: "#ffffff",
               borderRadius: 4,
               overflow: "hidden",
             }}
