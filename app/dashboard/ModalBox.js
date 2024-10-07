@@ -91,6 +91,7 @@ const ModalBox = ({ onSubmit, handleClose, onChange, value }) => {
             fullWidth
             value={value}
             placeholder="Enter name..."
+            autoComplete="off"
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyPress}
             sx={{

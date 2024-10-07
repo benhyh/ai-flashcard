@@ -56,8 +56,15 @@ export const Features = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
+      id="features"
     >
-      <Grid container spacing={3} maxWidth="1200px">
+      <Typography
+        variant="h1"
+        sx={{ mb: 8, color: "#e0e0e0", fontFamily: "Fondamento" }}
+      >
+        See your power in action
+      </Typography>
+      <Grid container spacing={3} maxWidth="1600px">
         <Grid item container xs={12} md={3} spacing={3}>
           {features.slice(0, 2).map((feature, index) => (
             <Grid item xs={12} key={index}>
@@ -80,11 +87,9 @@ export const Features = () => {
             }}
           >
             <video
-              id="features"
               controls
               muted
               loop
-              playsInline
               style={{
                 width: "100%",
                 height: "100%",
@@ -92,7 +97,6 @@ export const Features = () => {
               }}
             >
               <source src="/videos/Demo.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
             </video>
           </Paper>
         </Grid>

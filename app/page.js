@@ -15,8 +15,6 @@ export default function Home() {
     return null;
   }
 
-  // testing
-
   return (
     <>
       <Hero />

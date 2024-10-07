@@ -49,6 +49,8 @@ export const Pricing = () => {
         "100 AI-Powered Cards",
         "One Character Slot",
         "1 Random Talent",
+        "Basic Analytics",
+        "Email Support",
       ],
     },
     {
@@ -59,6 +61,8 @@ export const Pricing = () => {
         "1000 AI-Powered Cards",
         "2 Character Slots",
         "3 Random Talents",
+        "Advanced Analytics",
+        "Priority Email Support",
       ],
     },
     {
@@ -69,6 +73,8 @@ export const Pricing = () => {
         "Unlimited AI-Powered Cards",
         "5 Character Slots",
         "5 Random Talents",
+        "Premium Analytics",
+        "24/7 Support",
       ],
     },
   ];
@@ -100,12 +106,11 @@ export const Pricing = () => {
           justifyContent: "center",
           p: 4,
         }}
+        id="pricing"
       >
         <Typography
           variant="h1"
-          component="h2"
           sx={{ mb: 8, color: "#e0e0e0", fontFamily: "Fondamento" }}
-          id="pricing"
         >
           Choose your plan
           <Typography
@@ -122,12 +127,12 @@ export const Pricing = () => {
             Unlock endless possibilities.
           </Typography>
         </Typography>
-        <Grid container spacing={8} sx={{ maxWidth: "1152px", width: "100%" }}>
+        <Grid container spacing={8} sx={{ maxWidth: "1500px", width: "100%" }}>
           {plans.map((plan, index) => (
             <Grid item xs={12} md={4} key={index}>
               <Card
                 sx={{
-                  height: "100%",
+                  height: "50dvh",
                   display: "flex",
                   flexDirection: "column",
                   border: "1px solid #4b6a2e",
@@ -137,20 +142,20 @@ export const Pricing = () => {
                   <Typography
                     variant="h4"
                     component="h3"
-                    sx={{ mb: 1, color: "#4b6a2e", fontWeight: "bold" }}
+                    sx={{ mb: 1, ml: 2, color: "#4b6a2e", fontWeight: "bold" }}
                   >
                     {plan.title}
                   </Typography>
                   <Typography
                     variant="h3"
                     component="p"
-                    sx={{ mb: 2, fontWeight: "bold" }}
+                    sx={{ mb: 2, ml: 2, fontWeight: "bold" }}
                   >
                     {plan.price}
                   </Typography>
                   <List>
                     {plan.features.map((feature, featureIndex) => (
-                      <ListItem key={featureIndex} sx={{ py: 0.5 }}>
+                      <ListItem key={featureIndex} sx={{ py: 0.7 }}>
                         <ListItemIcon
                           sx={{ minWidth: "auto", mr: 1, color: "#4b6a2e" }}
                         >
@@ -167,6 +172,7 @@ export const Pricing = () => {
                     variant="contained"
                     onClick={() => handleSubmit(plan.id)}
                     sx={{
+                      fontSize: "1.1rem",
                       bgcolor: "#4b6a2e",
                       fontFamily: "Fondamento",
                       "&:hover": {
