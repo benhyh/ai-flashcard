@@ -16,7 +16,6 @@ export const Navigation = () => {
   const navigationItems = [
     { name: "Features", href: "/#features" },
     { name: "Pricing", href: "/#pricing" },
-    { name: "About", href: "/#about" },
     { name: "Contact", href: "/#contact" },
   ];
   const [isMenuOpen, setIsMenuOpen] = useState(false);

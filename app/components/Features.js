@@ -60,7 +60,13 @@ export const Features = () => {
     >
       <Typography
         variant="h1"
-        sx={{ mb: 8, color: "#e0e0e0", fontFamily: "Fondamento" }}
+        sx={{
+          display: "flex",
+          textAlign: "center",
+          mb: 8,
+          color: "#e0e0e0",
+          fontFamily: "Fondamento",
+        }}
       >
         See your power in action
       </Typography>
@@ -78,6 +84,7 @@ export const Features = () => {
             sx={{
               height: "100%",
               display: "flex",
+              height: "60dvh",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
@@ -134,14 +141,14 @@ const FeatureCard = ({ feature }) => {
         <Icon
           sx={{
             fontSize: 64,
-            mb: 2,
+            mb: 3,
             color: "#638c40",
           }}
         >
           {feature.icon}
         </Icon>
         <Typography
-          variant="h6"
+          variant="h5"
           component="h3"
           gutterBottom
           className={fondamento.className}
@@ -149,9 +156,9 @@ const FeatureCard = ({ feature }) => {
           {feature.title}
         </Typography>
         <Typography
-          variant="body2"
+          variant="subtitle1"
           className={fondamento.className}
-          sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+          sx={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "1.2rem" }}
         >
           {feature.description}
         </Typography>

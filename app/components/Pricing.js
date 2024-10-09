@@ -148,14 +148,13 @@ export const Pricing = () => {
                   </Typography>
                   <Typography
                     variant="h3"
-                    component="p"
                     sx={{ mb: 2, ml: 2, fontWeight: "bold" }}
                   >
                     {plan.price}
                   </Typography>
                   <List>
                     {plan.features.map((feature, featureIndex) => (
-                      <ListItem key={featureIndex} sx={{ py: 0.7 }}>
+                      <ListItem key={featureIndex} sx={{ py: 1.3 }}>
                         <ListItemIcon
                           sx={{ minWidth: "auto", mr: 1, color: "#4b6a2e" }}
                         >
@@ -166,7 +165,7 @@ export const Pricing = () => {
                     ))}
                   </List>
                 </CardContent>
-                <CardActions sx={{ p: 3, pt: 0 }}>
+                <CardActions sx={{ p: 4, pt: 0 }}>
                   <Button
                     fullWidth
                     variant="contained"
