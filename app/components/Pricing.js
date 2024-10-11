@@ -13,12 +13,9 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { blue, green, purple } from "@mui/material/colors";
 import getStripe from "@/utils/get-stripe";
-import SwordIcon from "@mui/icons-material/Gavel";
 import React from "react";
 import { Gavel } from "lucide-react";
-
 export const Pricing = () => {
   const handleSubmit = async (id) => {
     const checkoutSession = await fetch("/api/stripe", {
@@ -44,7 +41,7 @@ export const Pricing = () => {
     {
       id: 0,
       title: "Power 1",
-      price: "$0.00",
+      price: "$0.99",
       features: [
         "100 AI-Powered Cards",
         "One Character Slot",
@@ -104,13 +101,19 @@ export const Pricing = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          p: 4,
+          p: { xs: "1rem", sm: "2rem" },
         }}
         id="pricing"
       >
         <Typography
           variant="h1"
-          sx={{ mb: 8, color: "#e0e0e0", fontFamily: "Fondamento" }}
+          sx={{
+            mt: { xs: "8rem", md: 0 },
+            mb: "2rem",
+            color: "#e0e0e0",
+            fontFamily: "Fondamento",
+            fontSize: { xs: "2.5rem", sm: "3rem", md: "5rem" },
+          }}
         >
           Choose your plan
           <Typography
@@ -118,70 +121,90 @@ export const Pricing = () => {
               display: "flex",
               textAlign: "center",
               justifyContent: "center",
-              mt: 2,
               color: "#e0e0e0",
               fontFamily: "Fondamento",
-              fontSize: "2rem",
+              fontSize: { xs: "1.25rem", sm: "1.5rem", md: "2rem" },
             }}
           >
             Unlock endless possibilities.
           </Typography>
         </Typography>
-        <Grid container spacing={8} sx={{ maxWidth: "1500px", width: "100%" }}>
+        <Grid
+          container
+          spacing={{ xs: 4, md: 6, lg: 8 }}
+          sx={{ maxWidth: "90rem", width: "100%" }}
+        >
           {plans.map((plan, index) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
                 sx={{
-                  height: "50dvh",
+                  height: "100%",
                   display: "flex",
                   flexDirection: "column",
                   border: "1px solid #4b6a2e",
                 }}
               >
-                <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                <CardContent sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>
                   <Typography
                     variant="h4"
                     component="h3"
-                    sx={{ mb: 1, ml: 2, color: "#4b6a2e", fontWeight: "bold" }}
+                    sx={{
+                      mb: 1,
+                      ml: { xs: 1, sm: 2 },
+                      color: "#4b6a2e",
+                      fontWeight: "bold",
+                      fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+                    }}
                   >
                     {plan.title}
                   </Typography>
                   <Typography
                     variant="h3"
-                    sx={{ mb: 2, ml: 2, fontWeight: "bold" }}
+                    sx={{
+                      mb: 2,
+                      ml: { xs: 1, sm: 2 },
+                      fontWeight: "bold",
+                      fontSize: { xs: "1.75rem", sm: "2rem", md: "2.25rem" },
+                    }}
                   >
                     {plan.price}
                   </Typography>
                   <List>
                     {plan.features.map((feature, featureIndex) => (
-                      <ListItem key={featureIndex} sx={{ py: 1.3 }}>
+                      <ListItem
+                        key={featureIndex}
+                        sx={{ py: { xs: 0.5, md: 1 } }}
+                      >
                         <ListItemIcon
                           sx={{ minWidth: "auto", mr: 1, color: "#4b6a2e" }}
                         >
                           <Gavel size={16} />
                         </ListItemIcon>
-                        <ListItemText primary={feature} />
+                        <ListItemText
+                          primary={feature}
+                          primaryTypographyProps={{ xs: "0.9rem", sm: "1rem" }}
+                        />
                       </ListItem>
                     ))}
                   </List>
+                  <CardActions sx={{ p: 2 }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      onClick={() => handleSubmit(plan.id)}
+                      sx={{
+                        fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" },
+                        bgcolor: "#4b6a2e",
+                        fontFamily: "Fondamento",
+                        "&:hover": {
+                          bgcolor: "#3a5423",
+                        },
+                      }}
+                    >
+                      Choose Pack
+                    </Button>
+                  </CardActions>
                 </CardContent>
-                <CardActions sx={{ p: 4, pt: 0 }}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={() => handleSubmit(plan.id)}
-                    sx={{
-                      fontSize: "1.1rem",
-                      bgcolor: "#4b6a2e",
-                      fontFamily: "Fondamento",
-                      "&:hover": {
-                        bgcolor: "#3a5423",
-                      },
-                    }}
-                  >
-                    Choose Pack
-                  </Button>
-                </CardActions>
               </Card>
             </Grid>
           ))}

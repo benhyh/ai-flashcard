@@ -55,17 +55,19 @@ export const Features = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        width: { xs: "90%", md: "100%" },
+        margin: "0 auto",
       }}
       id="features"
     >
       <Typography
-        variant="h1"
         sx={{
           display: "flex",
           textAlign: "center",
-          mb: 8,
+          mb: { xs: 4, md: 8 },
           color: "#e0e0e0",
           fontFamily: "Fondamento",
+          fontSize: { xs: "2rem", md: "6rem" },
         }}
       >
         See your power in action
@@ -82,7 +84,7 @@ export const Features = () => {
           <Paper
             elevation={3}
             sx={{
-              height: "100%",
+              height: { xs: "40vh", sm: "50vh", md: "60vh" },
               display: "flex",
               height: "60dvh",
               flexDirection: "column",
@@ -118,7 +120,6 @@ export const Features = () => {
     </Box>
   );
 };
-
 const FeatureCard = ({ feature }) => {
   return (
     <Card
@@ -135,12 +136,13 @@ const FeatureCard = ({ feature }) => {
         "&:hover": {
           transform: "scale(1.05)",
         },
+        fontFamily: "Fondamento",
       }}
     >
       <CardContent>
         <Icon
           sx={{
-            fontSize: 64,
+            fontSize: { xs: 48, sm: 56, md: 64 },
             mb: 3,
             color: "#638c40",
           }}
@@ -152,13 +154,17 @@ const FeatureCard = ({ feature }) => {
           component="h3"
           gutterBottom
           className={fondamento.className}
+          sx={{ fontSize: { xs: "1.2rem", sm: "1.4rem", md: "1.5rem" } }} // Adjust font size for different screens
         >
           {feature.title}
         </Typography>
         <Typography
           variant="subtitle1"
           className={fondamento.className}
-          sx={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "1.2rem" }}
+          sx={{
+            color: "rgba(255, 255, 255, 0.7)",
+            fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" },
+          }}
         >
           {feature.description}
         </Typography>

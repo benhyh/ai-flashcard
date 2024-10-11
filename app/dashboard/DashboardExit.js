@@ -37,7 +37,7 @@ export const DashboardExit = () => {
           </Box>
         </Box>
       )}
-      <SignOutButton>
+      <SignOutButton redirectUrl="/">
         <Button
           variant="contained"
           sx={{

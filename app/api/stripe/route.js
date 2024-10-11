@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const formatAmountForStripe = (amount, currency) => {
+const formatAmountForStripe = (amount) => {
   return Math.round(amount * 100);
 };
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2022-11-15",
+  apiVersion: "2024-09-30.acacia",
 });
 
 export async function POST(req) {
@@ -48,10 +48,9 @@ export async function POST(req) {
       ],
       success_url: `${req.headers.get(
         "Referer"
-      )}result?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get(
-        "Referer"
-      )}result?session_id={CHECKOUT_SESSION_ID}`,
+      )}payment?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.get("Referer")}?#pricing`,
+      // cancel_url: `${req.headers.get("Origin")}?#pricing`
     };
 
     const checkoutSession = await stripe.checkout.sessions.create(params);

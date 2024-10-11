@@ -22,7 +22,17 @@ export const Contact = () => {
           }}
         >
           <Grid container spacing={12} justifyContent="space-between">
-            <Grid item xs={12} md={5}>
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{
+                textAlign: {
+                  xs: "center",
+                  md: "left",
+                },
+              }}
+            >
               <Typography
                 variant="h2"
                 sx={{
@@ -55,7 +65,7 @@ export const Contact = () => {
           sx={{
             bgcolor: "#4b6a2e",
             py: 2,
-            mt: { xs: 3, sm: 3 },
+            mt: { xs: 9 },
           }}
         >
           <Typography

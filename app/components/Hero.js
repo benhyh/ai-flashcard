@@ -42,6 +42,14 @@ const FlashcardPaper = styled(Paper)(({ theme }) => ({
   "&:hover": {
     transform: "scale(1.05)",
   },
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(1.5),
+    width: "20rem",
+    transform: "none",
+    "&:hover": {
+      transform: "none",
+    },
+  },
 }));
 
 export const Hero = () => {
@@ -63,18 +71,20 @@ export const Hero = () => {
             <Typography
               variant="h1"
               sx={{
-                fontSize: { xs: "3rem", lg: "4.5rem" },
+                fontSize: { xs: "2rem", md: "4.5rem" },
                 fontWeight: "bold",
                 lineHeight: "tight",
+                textAlign: { xs: "center", md: "left" },
               }}
             >
               Forge your legend with AI-powered knowledge
             </Typography>
             <Typography
               sx={{
-                fontSize: { xs: "1.25rem", lg: "1.5rem" },
+                fontSize: { xs: "1.25rem", md: "1.5rem" },
                 color: "#a3c585",
                 fontFamily: "Fondamento",
+                textAlign: { xs: "center", md: "left" },
               }}
             >
               Harness the power of AI to create dynamic flashcards that adapt to
@@ -130,7 +140,7 @@ export const Hero = () => {
                     fontWeight: "bold",
                     fontSize: "1.25rem",
                     fontFamily: "Fondamento",
-                    letterSpacing: "2rem",
+                    letterSpacing: { xs: "0.5rem", md: "1.5rem" },
                   }}
                 >
                   EMPOWERED

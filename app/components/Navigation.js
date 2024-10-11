@@ -32,14 +32,16 @@ export const Navigation = () => {
               <Box
                 component="img"
                 src="https://static.wikia.nocookie.net/6a8a753d-275a-460b-bf7c-2772291b8913/scale-to-width/755"
-                width={50}
-                height={50}
+                sx={{
+                  width: { xs: 30, sm: 40, md: 50 },
+                  height: { xs: 30, sm: 40, md: 50 },
+                }}
               />
               <Typography
-                variant="h4"
                 sx={{
                   fontWeight: "bold",
                   fontFamily: "Fondamento",
+                  fontSize: { xs: "1.5rem", sm: "1.5rem", md: "2rem" },
                 }}
               >
                 WokenAI
@@ -93,7 +95,7 @@ export const Navigation = () => {
           },
         }}
       >
-        <List>
+        <List sx={{ display: "flex", flexDirection: "column" }}>
           {navigationItems.map((item) => (
             <MuiLink
               key={item.name}
