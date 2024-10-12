@@ -1,25 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import {
-  AppBar,
-  Toolbar,
   Typography,
   Button,
-  IconButton,
   Box,
   Container,
   Link as MuiLink,
-  Drawer,
-  List,
-  ListItem,
   Paper,
   LinearProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ChevronRight, Menu } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 import { SignInButton } from "@clerk/nextjs";
 import { Navigation } from "./Navigation";
 
@@ -44,7 +35,7 @@ const FlashcardPaper = styled(Paper)(({ theme }) => ({
   },
   [theme.breakpoints.down("sm")]: {
     padding: theme.spacing(1.5),
-    width: "20rem",
+    width: "90%",
     transform: "none",
     "&:hover": {
       transform: "none",

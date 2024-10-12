@@ -136,7 +136,6 @@ const FeatureCard = ({ feature }) => {
         "&:hover": {
           transform: "scale(1.05)",
         },
-        fontFamily: "Fondamento",
       }}
     >
       <CardContent>
@@ -154,7 +153,10 @@ const FeatureCard = ({ feature }) => {
           component="h3"
           gutterBottom
           className={fondamento.className}
-          sx={{ fontSize: { xs: "1.2rem", sm: "1.4rem", md: "1.5rem" } }} // Adjust font size for different screens
+          sx={{
+            fontSize: { xs: "1.2rem", sm: "1.4rem", md: "1.5rem" },
+            fontFamily: "Fondamento",
+          }}
         >
           {feature.title}
         </Typography>
@@ -164,6 +166,7 @@ const FeatureCard = ({ feature }) => {
           sx={{
             color: "rgba(255, 255, 255, 0.7)",
             fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" },
+            fontFamily: "Fondamento",
           }}
         >
           {feature.description}

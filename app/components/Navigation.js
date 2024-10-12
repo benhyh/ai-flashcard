@@ -5,12 +5,12 @@ import {
   Box,
   Container,
   IconButton,
-  Menu,
   Link as MuiLink,
   List,
   Drawer,
 } from "@mui/material";
-import { useState } from "react";
+import { MenuIcon } from "lucide-react";
+import { useCallback, useState } from "react";
 
 export const Navigation = () => {
   const navigationItems = [
@@ -19,6 +19,35 @@ export const Navigation = () => {
     { name: "Contact", href: "/#contact" },
   ];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const handleNavigation = useCallback((e, href) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+
+    window.history.pushState({}, "", href);
+
+    const targetId = href.split("#")[1];
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
+  const NavLink = ({ href, children, ...props }) => (
+    <a
+      href={href}
+      onClick={(e) => handleNavigation(e, href)}
+      style={{
+        color: "white",
+        fontSize: "1.125rem",
+        textDecoration: "none",
+        fontFamily: "Fondamento",
+        padding: "1rem",
+      }}
+      {...props}
+    >
+      {children}
+    </a>
+  );
 
   return (
     <>
@@ -53,7 +82,7 @@ export const Navigation = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               color="inherit"
             >
-              <Menu />
+              <MenuIcon />
             </IconButton>
 
             <Box
@@ -91,13 +120,13 @@ export const Navigation = () => {
           display: { xs: "block", lg: "none" },
           "& .MuiDrawer-paper": {
             bgcolor: "#1a2412",
-            width: 250,
+            width: "50%",
           },
         }}
       >
         <List sx={{ display: "flex", flexDirection: "column" }}>
           {navigationItems.map((item) => (
-            <MuiLink
+            <NavLink
               key={item.name}
               href={item.href}
               sx={{
@@ -109,7 +138,7 @@ export const Navigation = () => {
               }}
             >
               {item.name}
-            </MuiLink>
+            </NavLink>
           ))}
         </List>
       </Drawer>
