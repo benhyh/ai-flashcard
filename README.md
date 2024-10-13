@@ -1,7 +1,5 @@
 # WokenAI - An AI Flashcard SaaS
 
----
-
 ## 1. Introduction
 **WokenAI** is an AI flashcard SaaS project I built as part of one projects from Headstarter.
 
