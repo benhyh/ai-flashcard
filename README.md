@@ -1,7 +1,7 @@
 # WokenAI - An AI Flashcard SaaS
 
 ## 1. Introduction
-**WokenAI** is an AI flashcard SaaS project I built as part of one projects from Headstarter.
+**WokenAI** is an AI flashcard SaaS project I built as part of one the projects from Headstarter.
 
 ## 2. Tech Stack 
 - **Frontend**: [Next.js](https://nextjs.org/), [React](https://reactjs.org/), [Material UI](https://mui.com/material-ui/)
